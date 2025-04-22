@@ -1,0 +1,48 @@
+﻿@model Instrutor
+@{
+    ViewData["Title"] = "Editar Colaborador";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Editar Colaborador</h1>
+</div>
+
+<form id="cadastroForm" asp-action="Get" method="get" asp-controller="Colaborador">
+    <input type="hidden" asp-for="Cpf" />
+    @Html.Partial("_ColaboradorForm", Model)
+</form> 
+
+@section Scripts {
+    <script>
+
+        function submitForm() {
+            const formData = {
+
+                Nome: checkField(document.getElementById('Nome')),
+                CPF: Model.cpf,
+                Telefone: checkField(document.getElementById('Telefone')),
+                Email: checkField(document.getElementById('Email')),
+            };
+
+            if (!validateFormInstrutor(formData)) {
+                return;
+             }
+            fetch('/api/Instrutor/@Model.Cpf', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                response.json()
+                window.location.href = '/Colaborador/Index';
+            })
+            .then(data => {
+                console.log(data)
+                
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+}

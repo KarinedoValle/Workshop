@@ -1,0 +1,33 @@
+﻿@model Instrutor
+
+
+<div class="divFormulario">
+    <div class="form-group div">
+        <label for="Nome">Nome</label>
+        <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do colaborador" asp-for="Nome" required />
+    </div>
+    <div class="form-group div">
+        <label for="CPF">CPF</label>
+        @if (Model == null || Model.Cpf == "")
+        {
+            <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" required/>
+        }
+        else {
+            <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" disabled/>
+        }
+    </div>
+    <div class="form-group div">
+        <label for="Email">E-mail</label>
+        <input type="email" class="form-control" id="Email" name="Email" placeholder="Insira o e-mail" asp-for="Email" data-mask="email" required />
+    </div>
+    <div class="form-group div">
+        <label for="Telefone">Celular</label>
+        <input type="tel" class="form-control" id="Telefone" name="Telefone" placeholder="Insira o número de celular" asp-for="Telefone" required />
+    </div>
+    <div class="divDuasColunas divBotoes">
+        <button type="button" class="btn-custom" onclick="submitForm()">Salvar</button>
+        <div></div>
+            <div></div>
+        <button type="button" class="btn-custom" onclick="Voltar('Colaborador')">Voltar</button>
+    </div>
+</div>

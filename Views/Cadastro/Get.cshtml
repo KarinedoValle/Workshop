@@ -1,0 +1,55 @@
+﻿@model Workshop
+@{
+    ViewData["Title"] = "Editar Workshop";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Editar Workshop</h1>
+</div>
+
+<form id="cadastroForm" asp-action="Get" method="get" asp-controller="Workshop">
+    <input type="hidden" asp-for="ID" />
+    @Html.Partial("_WorkshopForm", Model)
+</form> 
+
+@section Scripts {
+    <script>
+
+        function submitForm() {
+
+            const dateFields = document.querySelectorAll('p[name="Datas"]');
+            const dates = Array.from(dateFields).map(field => new Date(field.id).toISOString());
+            const formData = {
+
+                Nome: checkField(document.getElementById('Nome')),
+                Descricao: checkField(document.getElementById('Descricao')),
+                Datas: dates,
+                Instrutor: {cpf : checkField(document.getElementById('Instrutor'))},
+                CategoriaTexto: checkField(document.getElementById('CategoriaTexto')),
+                ModalidadeTexto: checkField(document.getElementById('ModalidadeTexto')),
+                StatusTexto: checkField(document.getElementById('StatusTexto'))
+            };
+
+            if (!validateFormWorkshop(formData)) {
+                return;
+             }
+
+            fetch('/api/Workshop/@Model.ID', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                response.json()
+                window.location.href = '/Home/Index';
+            })
+            .then(data => {
+                console.log(data)
+                
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+}

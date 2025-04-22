@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Workshops";
+    ViewData["Title"] = "Colaboradores";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Workshops</h1>
+    <h1 class="display-4">Colaboradores</h1>
 </div>
 
 <div class="text-end div">
@@ -15,14 +15,9 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nome</th>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th>Modalidade</th>
-                <th>Datas</th>
-                <th>Instrutor</th>
-                <th>Status</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -36,26 +31,19 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            fetch('/api/workshop') 
+            fetch('/api/Instrutor') 
                 .then(response => response.json())
                 .then(data => {
                     const container = $('#data-container');
                     container.empty();
                     data.forEach(item => {
-                        console.log("Item: ", item)
-                        const formattedDates = item.datas.map(date => formatDate(new Date(date))).join(', ');
                         container.append(`
-                          <tr data-id="${item.id}">
-                                <td>${item.id}</td>
+                          <tr data-id="${item.cpf}">
                                 <td>${item.nome}</td>
-                                <td>${item.descricao}</td>
-                                <td>${item.categoriaTexto}</td>
-                                <td>${item.modalidadeTexto}</td>
-                                <td>${formattedDates}</td>
-                                <td>${item.instrutor.nome}</td>
-                                <td>${item.statusTexto}</td>
-                                <td><i class="fas fa-edit" onclick="editarItem(${item.id})"></i></td>
-                                <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id})"></i></td>
+                                <td>${item.email}</td>
+                                <td>${item.telefone}</td>
+                                <td><i class="fas fa-edit" onclick="editarItem('${item.cpf}')"></i></td>
+                                <td><i class="fas fa-trash-alt" onclick="deletarItem('${item.cpf}')"></i></td>
                             </tr>
                         `);
                     });
@@ -67,25 +55,25 @@
         });
 
 
-        function editarItem(id) {
-            window.location.href = `/Cadastro/Get/${id}`;
+        function editarItem(cpfParametro) {
+            window.location.href = `/Colaborador/Get/${encodeURIComponent(cpfParametro)}`;
         }
 
         function cadastrarItem() {
-            window.location.href = `/Cadastro/Create`;
+            window.location.href = `/Colaborador/Create`;
         }
 
 
-        function deletarItem(id) {
-                    fetch(`/api/workshop/${id}`, {
+        function deletarItem(cpf) {
+                    fetch(`/api/Instrutor/${cpf}`, {
                         method: 'DELETE'
                     })
                     .then(response => {
                         if (response.ok) {
                             console.log("Workshop deletado com sucesso!");
-                            document.querySelector(`tr[data-id="${id}"]`).remove();
+                            document.querySelector(`tr[data-id="${cpf}"]`).remove();
                         } else {
-                            console.error("Erro ao deletar workshop.");
+                            console.error("Erro ao deletar Instrutor.");
                         }
                     })
                     .catch(error => console.error("Erro:", error));

@@ -18,5 +18,83 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    padding:6px;
 }
+
+
+.btn-custom {
+    background-color: rgba(1, 169, 152, 1);
+    color: #ffffff;
+    height: fit-content;
+    padding-block: 6px;
+    border-color: transparent;
+    border-radius: 5px;
+    padding-inline: 20px;
+}
+
+.div {
+    margin-bottom:20px;
+}
+
+.divDatas {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 30px;
+}
+
+.pDatas {
+    margin-top: 0;
+    margin-right: 10px;
+    background-color: rgba(1, 169, 152, 0.3);
+    border-radius: 5px;
+    padding-inline: 6px;
+    height: fit-content;
+}
+
+#datasContainer {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.divDuasColunas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+
+.error-border {
+    border: 1px solid red;
+}
+
+.divFormulario {
+    padding-inline: 6px;
+}
+
+
+.delete-icon {
+    padding-inline: 6px;
+}
+
+.divBotoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-top: 40px;
+}
+
+
+.form-control:focus {
+    box-shadow: 2px 2px 2px 2px lightgray;
+    border: 1px solid lightgray;
+}
+
+
+
+
+
+
+
+
+

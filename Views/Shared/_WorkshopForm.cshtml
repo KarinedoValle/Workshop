@@ -1,0 +1,111 @@
+﻿@model Workshop
+
+<div class="divFormulario">
+    <div class="form-group div">
+        <label for="Nome">Nome</label>
+        <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do workshop" asp-for="Nome" required />
+    </div>
+    <div class="form-group div">
+        <label for="Descricao">Descrição</label>
+        <input type="text" class="form-control" id="Descricao" name="Descricao" placeholder="Insira uma breve descrição" asp-for="Descricao" required />
+    </div>
+
+    <div class="form-group div">
+        <label for="Datas">Datas dos Encontros</label>
+        <div class="divDatas">
+            <div>
+                <div class="div" id="datasSelecao">
+                    <input type="datetime-local" class="form-control" name="Datas" id="dateInput" required />
+                </div>
+                <button type="button" class="btn-custom" onclick="addDateField()">Adicionar Data</button>
+            </div>
+            <div id="datasContainer">
+                @if(Model != null){
+                    @foreach (DateTime data in Model.Datas)
+                    {
+                        <script>
+                            var dateString = '@data.ToString("yyyy-MM-ddTHH:mm")';
+                            CreateDateField(dateString);
+                        </script>
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="divDuasColunas">
+        <div class="form-group div">
+            <label for="CategoriaTexto">Categoria</label>
+                <select class="form-control" id="CategoriaTexto" name="CategoriaTexto" required>
+                    <option value="">Selecione a categoria</option>
+                    @foreach (string categoria in ViewBag.Categorias)
+                    {
+                        string isSelected = Model != null && categoria == Model.CategoriaTexto ? "selected" : "";
+                        if (!string.IsNullOrEmpty(isSelected)) { 
+                            <option value="@categoria" selected>@categoria</option>
+                        }
+                        else{
+                            <option value="@categoria">@categoria</option>
+                        }
+                    }
+                </select>
+        </div>
+        <div class="form-group div">
+            <label for="ModalidadeTexto">Modalidade</label>
+            <select class="form-control" id="ModalidadeTexto" name="ModalidadeTexto" required>
+                <option value="">Selecione a modalidade</option>
+                @foreach (string modalidade in ViewBag.Modalidades)
+                {
+                    string isSelected = Model != null && modalidade == Model.ModalidadeTexto ? "selected" : "";
+                    if (!string.IsNullOrEmpty(isSelected))
+                    { 
+                        <option value="@modalidade" selected>@modalidade</option>
+                    } else{
+                        <option value="@modalidade">@modalidade</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="divDuasColunas">
+        <div class="form-group div">
+            <label for="Instrutor">Instrutor</label>
+            <select class="form-control" id="Instrutor" name="Instrutor.cpf" asp-for="Instrutor" required>
+                <option value="">Selecione o Instrutor</option>
+                @foreach (Instrutor Instrutor in ViewBag.Instrutores)
+                {
+                    string isSelected = Model != null && Instrutor.Cpf == Model.Instrutor.Cpf ? "selected" : "";
+                    if (!string.IsNullOrEmpty(isSelected)) { 
+                        <option value="@Instrutor.Cpf" selected>@Instrutor.Nome</option>
+                    } else{
+                        <option value="@Instrutor.Cpf">@Instrutor.Nome</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group div">
+            <label for="StatusTexto">Status</label>
+            <select class="form-control" id="StatusTexto" name="StatusTexto" required>
+                <option value="">Selecione o status</option>
+                @foreach (string status in ViewBag.Status)
+                {
+                    string isSelected = Model!= null && status == Model.StatusTexto ? "selected" : "";
+                    if (!string.IsNullOrEmpty(isSelected))
+                    { 
+                        <option value="@status" selected>@status</option>
+                    } else{
+                        <option value="@status">@status</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+        <div class="divDuasColunas divBotoes">
+            <button type="button" class="btn-custom" onclick="submitForm()">Salvar</button>
+            <div></div>
+             <div></div>
+            <button type="button" class="btn-custom" onclick="Voltar('Home')">Voltar</button>
+        </div>
+</div>
