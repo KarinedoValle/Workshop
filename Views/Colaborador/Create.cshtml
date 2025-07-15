@@ -41,7 +41,7 @@
                 if(response.status === 400){
                     return response.text().then(text => {
                                 alert(text);
-                                throw new Error(text); // Para parar a execução do restante do código
+                                throw new Error(text); 
                             });
                 }
                 return response.json();

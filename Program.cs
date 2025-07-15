@@ -28,6 +28,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+
 app.MapControllerRoute(
     name: "VisualizarPorIdentificador",
     pattern: "{controller}/{action}/{identificador}");
@@ -36,7 +37,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "CadastrarOuVisualizarTodosOsItens",
     pattern: "{controller}/{action}",
-    defaults: new { controller = "Home", action = "Index" });
+    defaults: new { controller = "Login", action = "Index" });
 
 
 
