@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "_LayoutLogin";
+}
+
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <img src="~/Imagens/logo_t2m.png" alt="T2M - Test to Market" style="height: 100px; width:180px;">
+</div>
+
+
+<div class="container-login">
+    <div class="div form-group divLogin">
+        <form method="post">
+            
+            <div class="div form-group">
+                <label for="username">Nome de usuário</label>
+                <input type="text" id="username" name="username" class="form-control inputLogin" required />
+            </div>
+            <div class="div form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" class="form-control inputLogin" required />
+            </div>
+            <div class="container-button">
+                <button type="submit" class="btn-custom">Login</button>
+            </div>
+            
+            <div class="text-danger">@ViewBag.Message</div>
+        </form>
+    </div>
+</div>
+
