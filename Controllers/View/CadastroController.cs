@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Workshop.DB;
@@ -6,6 +7,7 @@ using Workshop.Models;
 
 namespace Workshop.Controllers.View
 {
+    [Authorize]
     [Route("Cadastro")]
     public class CadastroController : Controller
     {
@@ -17,8 +19,8 @@ namespace Workshop.Controllers.View
             _context = context;
         }
 
-        [HttpGet("Create")]
-        public IActionResult Create()
+        [HttpGet("Cadastrar")]
+        public IActionResult Cadastrar()
         {
 
             ViewBag.Categorias = EnumExtensions.GetEnumDescriptions<Categoria>();
@@ -31,8 +33,8 @@ namespace Workshop.Controllers.View
             return View();
         }
 
-        [HttpGet("Get/{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("Workshop/{id}")]
+        public IActionResult Workshop(int id)
         {
             Models.Workshop? workshop = _context.Workshop.Include(w => w.Instrutor).FirstOrDefault(w => w.ID == id);
             

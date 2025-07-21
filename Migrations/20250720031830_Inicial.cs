@@ -15,7 +15,6 @@ namespace Workshop.Migrations
         {
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Workshop\";");
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Instrutor\";");
-            migrationBuilder.Sql("DROP TABLE IF EXISTS \"Condutor\";");
             migrationBuilder.CreateTable(
                 name: "Instrutor",
                 columns: table => new
@@ -23,7 +22,10 @@ namespace Workshop.Migrations
                     Cpf = table.Column<string>(type: "text", nullable: false),
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    Telefone = table.Column<string>(type: "text", nullable: false)
+                    Login = table.Column<string>(type: "text", nullable: false),
+                    Senha = table.Column<string>(type: "text", nullable: false),
+                    Telefone = table.Column<string>(type: "text", nullable: false),
+                    Perfil = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,6 +60,7 @@ namespace Workshop.Migrations
                 name: "IX_Workshop_InstrutorCpf",
                 table: "Workshop",
                 column: "InstrutorCpf");
+            migrationBuilder.Sql(InserirAdministrador());
         }
 
         /// <inheritdoc />
@@ -68,6 +71,24 @@ namespace Workshop.Migrations
 
             migrationBuilder.DropTable(
                 name: "Instrutor");
+        }
+
+        private string InserirAdministrador()
+        {
+            //Login: Admin
+            //Senha: Admin
+            return @"
+         INSERT INTO ""Instrutor"" (""Cpf"", ""Nome"", ""Email"", ""Login"", ""Senha"", ""Telefone"", ""Perfil"")
+         VALUES (
+             '958.854.486-63',
+             'Administrador',
+             'admin@workshop.com',
+             'Admin',
+             'AQAAAAIAAYagAAAAEHFmTj244LrioF2lYGv3T5jIXv8f6P+EiNb+Ca8YUA+W+ooUdHSkddUIsUvsqBByOg==',
+             '(81)99508-9677',
+             'Administrador'
+         );
+     ";
         }
     }
 }

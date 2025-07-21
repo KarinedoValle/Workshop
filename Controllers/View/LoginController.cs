@@ -1,32 +1,85 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Workshop.DB;
+using Workshop.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
 
 namespace Workshop.Controllers.View
 {
     public class LoginController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        public LoginController(ILogger<HomeController> logger)
+        private readonly AppDbContext _context;
+        private readonly SecurityKey _jwtKey;
+
+        public LoginController(ILogger<HomeController> logger, AppDbContext context, SecurityKey jwtKey)
         {
             _logger = logger;
+            _context = context;
+            _jwtKey = jwtKey;
         }
 
-        public IActionResult Index()
+        public IActionResult Logar()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Index(string username, string password)
+        public IActionResult Logar(string username, string password)
         {
-            if (username == "admin" && password == "password")
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
+            var instrutor = _context.Instrutor.FirstOrDefault(i => i.Login == username);
+
+            if (instrutor == null)
             {
                 ViewBag.Message = "Usuário ou senha inválidos";
                 return View();
             }
+
+            var hasher = new PasswordHasher<Instrutor>();
+            var result = hasher.VerifyHashedPassword(instrutor, instrutor.Senha, password);
+
+            if (result == PasswordVerificationResult.Success) {
+
+                var claims = new[]
+                        {
+                    new Claim(ClaimTypes.Name, instrutor.Login),
+                    new Claim("Cpf", instrutor.Cpf.ToString()),
+                    new Claim("Perfil", instrutor.Perfil)
+                };
+
+                var creds = new SigningCredentials(_jwtKey, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: "http://localhost:5001",
+                    audience: "http://localhost:5001",
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: creds);
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                TempData["Token"] = tokenString;
+
+                Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
+                {
+                    HttpOnly = false, 
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.Now.AddDays(1)
+                });
+
+                return RedirectToAction("Workshops", "Home");
+            }
+            
+            
+
+            ViewBag.Message = "Usuário ou senha inválidos";
+            return View();
         }
+        
     }
 }

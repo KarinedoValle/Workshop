@@ -13,7 +13,7 @@ using Workshop.DB;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250422001300_Inicial")]
+    [Migration("20250720031830_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -35,7 +35,20 @@ namespace Workshop.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Perfil")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("Perfil");
+
+                    b.Property<string>("Senha")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -56,7 +69,7 @@ namespace Workshop.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("CategoriaTexto")
+                    b.Property<string>("Categoria")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Categoria");
@@ -72,7 +85,7 @@ namespace Workshop.Migrations
                     b.Property<string>("InstrutorCpf")
                         .HasColumnType("text");
 
-                    b.Property<string>("ModalidadeTexto")
+                    b.Property<string>("Modalidade")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Modalidade");
@@ -81,7 +94,7 @@ namespace Workshop.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("StatusTexto")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Status");

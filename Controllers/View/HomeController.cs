@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Workshop.Controllers.View
 {
-    //[Route("Home")]
+    [Authorize]
+    [Route("Home")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -11,7 +13,8 @@ namespace Workshop.Controllers.View
             _logger = logger;
         }
 
-        public IActionResult Index()
+        [HttpGet("Workshops")]
+        public IActionResult Workshops()
         {
             return View();
         }

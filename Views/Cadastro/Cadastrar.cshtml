@@ -7,7 +7,7 @@
     <h1 class="display-4">Cadastro</h1>
 </div>
 
-<form id="cadastroForm" asp-action="Post" method="post" asp-controller="Workshop">
+<form id="cadastroForm" asp-action="Cadastrar" method="post" asp-controller="Cadastro">
     @Html.Partial("_WorkshopForm", Model)
 </form>
 
@@ -23,16 +23,16 @@
                 Nome: checkField(document.getElementById('Nome')),
                 Descricao: checkField(document.getElementById('Descricao')),
                 Datas: dates,
-                Instrutor: {cpf : checkField(document.getElementById('Instrutor'))},
-                CategoriaTexto: checkField(document.getElementById('CategoriaTexto')),
-                ModalidadeTexto: checkField(document.getElementById('ModalidadeTexto')),
-                StatusTexto: checkField(document.getElementById('StatusTexto'))
+                InstrutorCpf: checkField(document.getElementById('Instrutor')),
+                Categoria: checkField(document.getElementById('Categoria')),
+                Modalidade: checkField(document.getElementById('Modalidade')),
+                Status: checkField(document.getElementById('Status'))
             };
 
-            if (!validateFormWorkshop(formData)) {
+            if(!validaWorkshopCamposPrincipais(formData)){
+                alert("Não foi possível salvar as informações.");
                 return;
-             }
-
+            }
 
             fetch('/api/Workshop', {
                 method: 'POST',
@@ -43,7 +43,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                window.location.href = '/Home/Index';
+                window.location.href = '/Home/Workshops';
             })
             .catch(error => console.error('Error:', error));
         }

@@ -24,15 +24,16 @@
                 Nome: checkField(document.getElementById('Nome')),
                 Descricao: checkField(document.getElementById('Descricao')),
                 Datas: dates,
-                Instrutor: {cpf : checkField(document.getElementById('Instrutor'))},
-                CategoriaTexto: checkField(document.getElementById('CategoriaTexto')),
-                ModalidadeTexto: checkField(document.getElementById('ModalidadeTexto')),
-                StatusTexto: checkField(document.getElementById('StatusTexto'))
+                InstrutorCpf: checkField(document.getElementById('Instrutor')),
+                Categoria: checkField(document.getElementById('Categoria')),
+                Modalidade: checkField(document.getElementById('Modalidade')),
+                Status: checkField(document.getElementById('Status'))
             };
 
-            if (!validateFormWorkshop(formData)) {
+            if(!validaWorkshopCamposPrincipais(formData)){
+                alert("Não foi possível salvar as informações.");
                 return;
-             }
+            }
 
             fetch('/api/Workshop/@Model.ID', {
                 method: 'PUT',
@@ -43,11 +44,7 @@
             })
             .then(response => {
                 response.json()
-                window.location.href = '/Home/Index';
-            })
-            .then(data => {
-                console.log(data)
-                
+                window.location.href = '/Home/Workshops';
             })
             .catch(error => console.error('Error:', error));
         }
