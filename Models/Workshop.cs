@@ -12,18 +12,23 @@ namespace Workshop.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        [NotMapped]
+        private Categoria CategoriaEnum { get; set; }
+
+        [NotMapped]
+        private Modalidade ModalidadeEnum { get; set; }
+
+        [NotMapped]
+        private Status StatusEnum { get; set; }
+
+        [NotMapped]
+        private List<DateTime> _datas;
+
         public string Nome { get; set; }
-
-        [NotMapped]
-        private Categoria Categoria { get; set; }
-
-        [NotMapped]
-        private Modalidade Modalidade { get; set; }
 
         public string Descricao { get; set; }
 
-
-        private List<DateTime> _datas;
+        public Instrutor Instrutor { get; set; }
 
         public List<DateTime> Datas
         {
@@ -37,34 +42,30 @@ namespace Workshop.Models
             }
         }
 
-
-        public Instrutor Instrutor { get; set; }
-
-        [NotMapped]
-        private Status Status { get; set; }
+        
 
         [Column("Categoria")]
         [JsonProperty("Categoria")]
-        public string CategoriaTexto
+        public string Categoria
         {
-            get { return Categoria.GetDescription(); }
-            set { Categoria = EnumExtensions.GetEnumByDescription<Categoria>(value); }
+            get { return CategoriaEnum.GetDescription(); }
+            set { CategoriaEnum = EnumExtensions.GetEnumByDescription<Categoria>(value); }
         }
 
         [JsonProperty("Modalidade")]
         [Column("Modalidade")]
-        public string ModalidadeTexto
+        public string Modalidade
         {
-            get { return Modalidade.GetDescription(); }
-            set { Modalidade = EnumExtensions.GetEnumByDescription<Modalidade>(value); }
+            get { return ModalidadeEnum.GetDescription(); }
+            set { ModalidadeEnum = EnumExtensions.GetEnumByDescription<Modalidade>(value); }
         }
 
-        [JsonProperty("Status")]
         [Column("Status")]
-        public string StatusTexto
+        [JsonProperty("Status")]
+        public string Status
         {
-            get { return Status.GetDescription(); }
-            set { Status = EnumExtensions.GetEnumByDescription<Status>(value); }
+            get { return StatusEnum.GetDescription(); }
+            set { StatusEnum = EnumExtensions.GetEnumByDescription<Status>(value); }
         }
 
         public static Workshop ConverteParaModelo(WorkshopRequest request, Instrutor Instrutor, int? id = null) {
@@ -76,9 +77,9 @@ namespace Workshop.Models
                     Descricao = request.Descricao,
                     Datas = request.Datas,
                     Instrutor = Instrutor,
-                    CategoriaTexto = request.CategoriaTexto,
-                    ModalidadeTexto = request.ModalidadeTexto,
-                    StatusTexto = request.StatusTexto
+                    Categoria = request.Categoria,
+                    Modalidade = request.Modalidade,
+                    Status = request.Status
                 }; 
             }
             return new Workshop
@@ -87,9 +88,9 @@ namespace Workshop.Models
                 Descricao = request.Descricao,
                 Datas = request.Datas,
                 Instrutor = Instrutor,
-                CategoriaTexto = request.CategoriaTexto,
-                ModalidadeTexto = request.ModalidadeTexto,
-                StatusTexto = request.StatusTexto
+                Categoria = request.Categoria,
+                Modalidade = request.Modalidade,
+                Status = request.Status
             };
         }
 

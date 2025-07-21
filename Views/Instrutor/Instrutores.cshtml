@@ -1,9 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Colaboradores";
+    ViewData["Title"] = "Instrutores";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Colaboradores</h1>
+    <h1 class="display-4">Instrutores</h1>
 </div>
 
 <div class="text-end div">
@@ -56,11 +56,11 @@
 
 
         function editarItem(cpfParametro) {
-            window.location.href = `/Colaborador/Get/${encodeURIComponent(cpfParametro)}`;
+            window.location.href = `/Instrutor/Instrutor/${encodeURIComponent(cpfParametro)}`;
         }
 
         function cadastrarItem() {
-            window.location.href = `/Colaborador/Create`;
+            window.location.href = `/Instrutor/Cadastrar`;
         }
 
 
@@ -70,10 +70,9 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            console.log("Workshop deletado com sucesso!");
                             document.querySelector(`tr[data-id="${cpf}"]`).remove();
                         } else {
-                            console.error("Erro ao deletar Instrutor.");
+                            alert("Erro ao deletar Instrutor.");
                         }
                     })
                     .catch(error => console.error("Erro:", error));

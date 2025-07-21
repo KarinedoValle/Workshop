@@ -42,18 +42,17 @@
                     const container = $('#data-container');
                     container.empty();
                     data.forEach(item => {
-                        console.log("Item: ", item)
                         const formattedDates = item.datas.map(date => formatDate(new Date(date))).join(', ');
                         container.append(`
                           <tr data-id="${item.id}">
                                 <td>${item.id}</td>
                                 <td>${item.nome}</td>
                                 <td>${item.descricao}</td>
-                                <td>${item.categoriaTexto}</td>
-                                <td>${item.modalidadeTexto}</td>
+                                <td>${item.categoria}</td>
+                                <td>${item.modalidade}</td>
                                 <td>${formattedDates}</td>
                                 <td>${item.instrutor.nome}</td>
-                                <td>${item.statusTexto}</td>
+                                <td>${item.status}</td>
                                 <td><i class="fas fa-edit" onclick="editarItem(${item.id})"></i></td>
                                 <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id})"></i></td>
                             </tr>
@@ -68,11 +67,11 @@
 
 
         function editarItem(id) {
-            window.location.href = `/Cadastro/Get/${id}`;
+            window.location.href = `/Cadastro/Workshop/${id}`;
         }
 
         function cadastrarItem() {
-            window.location.href = `/Cadastro/Create`;
+            window.location.href = `/Cadastro/Cadastrar`;
         }
 
 
@@ -82,10 +81,9 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            console.log("Workshop deletado com sucesso!");
                             document.querySelector(`tr[data-id="${id}"]`).remove();
                         } else {
-                            console.error("Erro ao deletar workshop.");
+                           alert("Erro ao deletar workshop.");
                         }
                     })
                     .catch(error => console.error("Erro:", error));

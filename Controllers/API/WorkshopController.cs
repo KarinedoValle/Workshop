@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Workshop.DB;
 using Workshop.Models;
@@ -7,6 +8,7 @@ using Workshop.Models;
 
 namespace Workshop.Controllers.API
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class WorkshopController : ControllerBase
@@ -28,9 +30,9 @@ namespace Workshop.Controllers.API
              .Include(w => w.Instrutor)
              .ToList();
 
-            Models.Workshop.Sort(workshops);
+            
 
-            return Ok(workshops);
+            return Ok(Models.Workshop.Sort(workshops));
 
         }
 
@@ -53,9 +55,9 @@ namespace Workshop.Controllers.API
         [HttpPost]
         public ActionResult Post([FromBody] WorkshopRequest workshop)
         {
-            Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(c => c.Cpf == workshop.Instrutor.Cpf);
+            Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(instrutor => instrutor.Cpf == Instrutor.FormatCpf(workshop.InstrutorCpf));
             if (Instrutor == null)
-                return NotFound($"Instrutor com CPF {workshop.Instrutor.Cpf} não encontrado.");
+                return NotFound($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
 
             Models.Workshop workshopModelo = Models.Workshop.ConverteParaModelo(workshop, Instrutor);
 
@@ -71,11 +73,11 @@ namespace Workshop.Controllers.API
 
             Models.Workshop? workshopEncontrado = _context.Workshop.Find(id);
             if (workshopEncontrado == null)
-                return NotFound();
+                return NotFound($"Workshop com Id {id} não encontrado.");
 
-            Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(c => c.Cpf == workshop.Instrutor.Cpf);
+            Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(instrutor => instrutor.Cpf == Instrutor.FormatCpf(workshop.InstrutorCpf));
             if (Instrutor == null)
-                return NotFound($"Instrutor com CPF {workshop.Instrutor.Cpf} não encontrado.");
+                return NotFound($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
 
             Models.Workshop workshopModelo = Models.Workshop.ConverteParaModelo(workshop, Instrutor, workshopEncontrado.ID);
 

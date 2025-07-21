@@ -1,15 +1,15 @@
 ﻿@model Instrutor
 @{
-    ViewData["Title"] = "Editar Colaborador";
+    ViewData["Title"] = "Editar Instrutor";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Editar Colaborador</h1>
+    <h1 class="display-4">Editar Instrutor</h1>
 </div>
 
-<form id="cadastroForm" asp-action="Get" method="get" asp-controller="Colaborador">
+<form id="cadastroForm" asp-action="Instrutor" method="get" asp-controller="Instrutor">
     <input type="hidden" asp-for="Cpf" />
-    @Html.Partial("_ColaboradorForm", Model)
+    @Html.Partial("_InstrutorForm", Model)
 </form> 
 
 @section Scripts {
@@ -19,12 +19,15 @@
             const formData = {
 
                 Nome: checkField(document.getElementById('Nome')),
-                CPF: Model.cpf,
+                CPF: '@Model.Cpf',
                 Telefone: checkField(document.getElementById('Telefone')),
                 Email: checkField(document.getElementById('Email')),
+                Login: checkField(document.getElementById('Login')),
+                Senha: checkField(document.getElementById('Senha'))
             };
 
             if (!validateFormInstrutor(formData)) {
+                alert("Não foi possível salvar as informações.");
                 return;
              }
             fetch('/api/Instrutor/@Model.Cpf', {
@@ -36,11 +39,7 @@
             })
             .then(response => {
                 response.json()
-                window.location.href = '/Colaborador/Index';
-            })
-            .then(data => {
-                console.log(data)
-                
+                window.location.href = '/Instrutor/Instrutores';
             })
             .catch(error => console.error('Error:', error));
         }

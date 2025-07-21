@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Workshop.DB;
 using Workshop.Models;
@@ -7,6 +9,7 @@ using Workshop.Models;
 
 namespace Workshop.Controllers.API
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class InstrutorController : ControllerBase
@@ -23,8 +26,17 @@ namespace Workshop.Controllers.API
 
         public ActionResult<IEnumerable<Instrutor>> Get()
         {
-            List<Instrutor> Instrutores = _context.Instrutor.
+            var Instrutores = _context.Instrutor.
                 OrderBy(c => c.Nome)
+                .Select(instrutor => new
+                {
+                    instrutor.Nome,
+                    instrutor.Cpf,
+                    instrutor.Email,
+                    instrutor.Login,
+                    instrutor.Telefone,
+                    instrutor.Perfil
+                })
                 .ToList();
             ;
             return Ok(Instrutores);
@@ -34,21 +46,36 @@ namespace Workshop.Controllers.API
         [HttpGet("{cpf}")]
         public ActionResult<Instrutor> Get(string cpf)
         {
-            Instrutor? Instrutor = _context.Instrutor.Find(cpf);
+            Instrutor? Instrutor = _context.Instrutor.Find(Instrutor.FormatCpf(cpf));
             if (Instrutor == null)
                 return NotFound();
 
-            return Ok(Instrutor);
+            var viewModel = new 
+            {
+                Instrutor.Nome,
+                Instrutor.Cpf,
+                Instrutor.Email,
+                Instrutor.Login,
+                Instrutor.Telefone,
+                Instrutor.Perfil
+            };
+
+            return Ok(viewModel);
 
         }
 
         [HttpPost]
         public ActionResult Post([FromBody] Instrutor Instrutor)
         {
-            Instrutor? InstrutorEncontrado = _context.Instrutor.Find(Instrutor.Cpf);
+            Instrutor? InstrutorEncontrado = _context.Instrutor.Find(Instrutor.FormatCpf(Instrutor.Cpf));
             if (InstrutorEncontrado != null)
-                return BadRequest($"Colaborador já foi cadastrado: {InstrutorEncontrado.Nome}");
+                return BadRequest($"Um instrutor com este CPF já foi cadastrado.");
 
+            InstrutorEncontrado = _context.Instrutor.Find(Instrutor.Login);
+            if (InstrutorEncontrado != null)
+                return BadRequest($"Um instrutor com este login já foi cadastrado.");
+
+            Instrutor.Senha = HashPassword(Instrutor.Senha);
             _context.Instrutor.Add(Instrutor);
             _context.SaveChanges();
             return CreatedAtAction(nameof(Get), new { Instrutor.Cpf }, Instrutor);
@@ -58,13 +85,14 @@ namespace Workshop.Controllers.API
         public ActionResult Put(string cpf, [FromBody] Instrutor Instrutor)
         {
 
-            Instrutor? InstrutorEncontrado = _context.Instrutor.Find(cpf);
+            Instrutor? InstrutorEncontrado = _context.Instrutor.Find(Instrutor.FormatCpf(cpf));
             if (InstrutorEncontrado == null)
                 return NotFound();
 
             if (Instrutor.Cpf == null)
                 Instrutor.Cpf = InstrutorEncontrado.Cpf;
 
+            Instrutor.Senha = HashPassword(Instrutor.Senha);
             _context.Entry(InstrutorEncontrado).State = EntityState.Detached;
 
             _context.Entry(Instrutor).State = EntityState.Modified;
@@ -77,7 +105,7 @@ namespace Workshop.Controllers.API
         public ActionResult Delete(string cpf)
         {
 
-            Instrutor? Instrutor = _context.Instrutor.Find(cpf);
+            Instrutor? Instrutor = _context.Instrutor.Find(Instrutor.FormatCpf(cpf));
             if (Instrutor == null)
                 return NotFound();
 
@@ -87,5 +115,12 @@ namespace Workshop.Controllers.API
             return NoContent();
 
         }
-    }
+
+        private string HashPassword(string senha)
+        {
+            var passwordHasher = new PasswordHasher<Instrutor>();
+            return passwordHasher.HashPassword(null, senha);
+        }
+
+}
 }

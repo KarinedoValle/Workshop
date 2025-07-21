@@ -19,14 +19,14 @@ function checkField(field) {
     return field.value;
 }
 
-function validateFormWorkshop(formData) {
-    if (!formData.Nome || !formData.Descricao || !formData.Instrutor || !formData.CategoriaTexto || !formData.ModalidadeTexto || !formData.StatusTexto)
+function validaWorkshopCamposPrincipais(formData) {
+    if (!formData.Nome || !formData.Descricao || !formData.InstrutorCpf || !formData.Categoria || !formData.Modalidade || !formData.Status)
         return false;
     return true;
 }
 
 function validateFormInstrutor(formData) {
-    if (!formData.Nome || !formData.CPF || !formData.Telefone || !formData.Email)
+    if (!formData.Nome || !formData.CPF || !formData.Telefone || !formData.Email || !formData.Login || !formData.Senha)
         return false;
     return true;
 }
@@ -44,10 +44,10 @@ function addDateField() {
         return;
     }
 
-    CreateDateField(document.querySelector('input[name="Datas"]').value);
+    CriarCampoDeData(document.querySelector('input[name="Datas"]').value);
 }
 
-function CreateDateField(dateString) {
+function CriarCampoDeData(dateString) {
     const container = document.getElementById('datasContainer');
     const newDateField = document.createElement('p');
     newDateField.setAttribute('name', 'Datas');
@@ -68,5 +68,5 @@ function CreateDateField(dateString) {
 }
 
 function Voltar(pagina) {
-    window.location.href = `/${pagina}/Index`;
+    window.location.href = `/${pagina}`;
 }
