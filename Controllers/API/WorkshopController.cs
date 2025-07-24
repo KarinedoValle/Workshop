@@ -116,7 +116,7 @@ namespace Workshop.Controllers.API
 
         }
 
-        public bool ValidarHorarioComercial(List<DateTime>? datas)
+        private bool ValidarHorarioComercial(List<DateTime>? datas)
         {
             if (datas == null || datas.Count == 0)
                 return true;
