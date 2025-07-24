@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "_LayoutLogin";
+    ViewData["Title"] = "Não autorizado";
+}
+
+<div class="container text-center py-5">
+    <h1 class="display-3 text-danger">401</h1>
+    <h2 class="mb-4">Acesso não autorizado</h2>
+    <p class="lead text-muted">
+        Você não tem permissão para acessar esta página.
+    </p>
+
+    <div class="mt-4">
+        <a href="/Login/Logar" class="btn btn-outline-secondary btn-lg ms-2">
+            Ir para Login
+        </a>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg ms-2">
+            Voltar
+        </a>
+    </div>
+</div>

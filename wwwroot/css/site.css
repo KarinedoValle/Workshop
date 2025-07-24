@@ -31,7 +31,8 @@ body {
     border-color: transparent;
     border-radius: 5px;
     padding-inline: 20px;
-    line-height:initial;
+    line-height: initial;
+    min-width: 150px
 }
 
 .div {
@@ -72,6 +73,7 @@ body {
 
 .divFormulario {
     padding-inline: 6px;
+    padding-top: 30px;
 }
 
 
@@ -80,9 +82,12 @@ body {
 }
 
 .divBotoes {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-top: 20px;
+    display: flex;
+    /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
+    justify-content: right;
     margin-top: 40px;
+    
 }
 
 
@@ -122,6 +127,13 @@ body {
     justify-content: center;
     align-items: center;
 
+}
+
+select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
 }
 
 

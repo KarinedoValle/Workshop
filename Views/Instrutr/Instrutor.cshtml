@@ -1,0 +1,64 @@
+﻿@model Instrutor
+@{
+    ViewData["Title"] = "Editar Instrutor";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Editar Instrutor</h1>
+</div>
+
+<form id="cadastroForm" asp-action="Instrutor" method="get" asp-controller="Instrutr">
+    <input type="hidden" asp-for="Cpf" />
+    @Html.Partial("_InstrutorForm", Model)
+</form> 
+
+@section Scripts {
+    <script>
+
+        function submitForm() {
+            const formData = {
+
+                Nome: checkField(document.getElementById('Nome')),
+                CPF: '@Model.Cpf',
+                Telefone: checkField(document.getElementById('Telefone')),
+                Email: checkField(document.getElementById('Email')),
+                Login: checkField(document.getElementById('Login')),
+                Senha: checkField(document.getElementById('Senha')),
+                Perfil: checkField(document.getElementById('Perfil'))
+            };
+
+            fetch('/api/Instrutor/@Model.Cpf', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            }).then(response =>{
+                if (response.status === 400) {
+                    return response.json().then(errorData => {
+                        const erros = errorData.errors;
+                        const mensagens = [];
+
+                        for (let campo in erros) {
+                            mensagens.push(erros[campo][0]);
+                        }
+
+                        alert(mensagens.join('\n'));
+                        throw new Error(mensagens.join('\n'));
+                    });
+                }
+                if(!response.status.ok){
+                    response.text().then(errorText => {
+                            alert(`${errorText}`);
+                            throw new Error(errorText);
+                    });
+                }
+                return response.text();
+            })
+            .then(data => {
+                window.location.href = '/Instrutor/Instrutores';
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+    </script>
+}

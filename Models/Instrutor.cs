@@ -9,6 +9,7 @@ namespace Workshop.Models
     public class Instrutor
     {
         [Key]
+        [Required(ErrorMessage = "O CPF é obrigatório.")]
         public string Cpf
         {
             get => _cpf;
@@ -16,7 +17,7 @@ namespace Workshop.Models
         }
 
         [NotMapped]
-        private Perfil PerfilEnum { get; set; }
+        private Perfil? PerfilEnum { get; set; }
 
         [NotMapped]
         private string _cpf;
@@ -27,12 +28,16 @@ namespace Workshop.Models
         [Required(ErrorMessage = "A senha é obrigatória.")]
         public string Senha { get; set; }
 
+        [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "O email é obrigatório.")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "O login é obrigatório.")]
         public string Login { get; set; }
 
+        [Required(ErrorMessage = "O telefone é obrigatório.")]
         public string Telefone
         {
             get => _telefone;
@@ -42,10 +47,29 @@ namespace Workshop.Models
        
         [Column("Perfil")]
         [JsonProperty(nameof(Perfil))]
+        [Required(ErrorMessage = "O perfil é obrigatório.")]
+        [EnumValido(typeof(Perfil), ErrorMessage = "O perfil é obrigatório.")]
         public string Perfil
         {
-            get { return PerfilEnum.GetDescription(); }
-            set { PerfilEnum = EnumExtensions.GetEnumByDescription<Perfil>(value); }
+            get => PerfilEnum?.GetDescription() ?? string.Empty;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    PerfilEnum = null;
+                }
+                else
+                {
+                    try
+                    {
+                        PerfilEnum = EnumExtensions.GetEnumByDescription<Perfil>(value);
+                    }
+                    catch (ArgumentException)
+                    {
+                        PerfilEnum = null;
+                    }
+                }
+            }
         }
 
         public static string FormatCpf(string cpf)

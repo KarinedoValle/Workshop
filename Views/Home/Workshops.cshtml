@@ -54,7 +54,7 @@
                                 <td>${item.instrutor.nome}</td>
                                 <td>${item.status}</td>
                                 <td><i class="fas fa-edit" onclick="editarItem(${item.id})"></i></td>
-                                <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id})"></i></td>
+                                <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id}, '${item.nome}')"></i></td>
                             </tr>
                         `);
                     });
@@ -75,7 +75,10 @@
         }
 
 
-        function deletarItem(id) {
+        function deletarItem(id, nome) {
+                    if (!confirm(`Deseja deletar o workshop: ${nome}?`)) {
+                        return;
+                    }
                     fetch(`/api/workshop/${id}`, {
                         method: 'DELETE'
                     })

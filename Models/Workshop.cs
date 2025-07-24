@@ -13,21 +13,24 @@ namespace Workshop.Models
         public int ID { get; set; }
 
         [NotMapped]
-        private Categoria CategoriaEnum { get; set; }
+        private Categoria? CategoriaEnum { get; set; }
 
         [NotMapped]
-        private Modalidade ModalidadeEnum { get; set; }
+        private Modalidade? ModalidadeEnum { get; set; }
 
         [NotMapped]
-        private Status StatusEnum { get; set; }
+        private Status? StatusEnum { get; set; }
 
         [NotMapped]
         private List<DateTime> _datas;
 
+        [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Nome { get; set; }
 
+        [Required(ErrorMessage = "A descrição é obrigatória.")]
         public string Descricao { get; set; }
 
+        [Required(ErrorMessage = "O instrutor é obrigatório.")]
         public Instrutor Instrutor { get; set; }
 
         public List<DateTime> Datas
@@ -46,26 +49,83 @@ namespace Workshop.Models
 
         [Column("Categoria")]
         [JsonProperty("Categoria")]
+        [Required(ErrorMessage = "A categoria é obrigatória.")]
+        [EnumValido(typeof(Categoria), ErrorMessage = "A categoria é obrigatória.")]
         public string Categoria
         {
-            get { return CategoriaEnum.GetDescription(); }
-            set { CategoriaEnum = EnumExtensions.GetEnumByDescription<Categoria>(value); }
+            get => CategoriaEnum?.GetDescription() ?? string.Empty;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    CategoriaEnum = null;
+                }
+                else
+                {
+                    try
+                    {
+                        CategoriaEnum = EnumExtensions.GetEnumByDescription<Categoria>(value);
+                    }
+                    catch (ArgumentException)
+                    {
+                        CategoriaEnum = null;
+                    }
+                }
+            }
         }
 
         [JsonProperty("Modalidade")]
         [Column("Modalidade")]
+        [Required(ErrorMessage = "A modalidade é obrigatória.")]
+        [EnumValido(typeof(Modalidade), ErrorMessage = "A modalidade é obrigatória.")]
         public string Modalidade
         {
-            get { return ModalidadeEnum.GetDescription(); }
-            set { ModalidadeEnum = EnumExtensions.GetEnumByDescription<Modalidade>(value); }
+            get => ModalidadeEnum?.GetDescription() ?? string.Empty;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    ModalidadeEnum = null;
+                }
+                else
+                {
+                    try
+                    {
+                        ModalidadeEnum = EnumExtensions.GetEnumByDescription<Modalidade>(value);
+                    }
+                    catch (ArgumentException)
+                    {
+                        ModalidadeEnum = null;
+                    }
+                }
+            }
         }
 
         [Column("Status")]
         [JsonProperty("Status")]
+        [Required(ErrorMessage = "O status é obrigatório.")]
+        [EnumValido(typeof(Status), ErrorMessage = "O status é obrigatório.")]
         public string Status
         {
-            get { return StatusEnum.GetDescription(); }
-            set { StatusEnum = EnumExtensions.GetEnumByDescription<Status>(value); }
+            get => StatusEnum?.GetDescription() ?? string.Empty;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    StatusEnum = null;
+                }
+                else
+                {
+                    try
+                    {
+                        StatusEnum = EnumExtensions.GetEnumByDescription<Status>(value);
+                    }
+                    catch (ArgumentException)
+                    {
+                        StatusEnum = null;
+                    }
+                }
+            }
         }
 
         public static Workshop ConverteParaModelo(WorkshopRequest request, Instrutor Instrutor, int? id = null) {

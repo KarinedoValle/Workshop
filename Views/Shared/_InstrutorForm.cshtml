@@ -2,33 +2,24 @@
 
 
 <div class="divFormulario">
-    <div class="form-group div">
-        <label for="Nome">Nome</label>
-        <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do instrutor" asp-for="Nome" required />
+    <div class="divDuasColunas">
+        <div class="form-group div">
+            <label for="Nome">Nome</label>
+            <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do instrutor" asp-for="Nome" required />
+        </div>
+        <div class="form-group div">
+            <label for="Login">Login</label>
+            <input type="text" class="form-control" id="Login" name="Login" placeholder="Insira o login do instrutor" asp-for="Login" required />
+        </div>
     </div>
-    <div class="form-group div">
-        <label for="CPF">CPF</label>
-        @if (Model == null || Model.Cpf == "")
-        {
-            <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" required/>
-        }
-        else {
-            <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" disabled/>
-        }
-    </div>
-    <div class="form-group div">
-        <label for="Login">Login</label>
-        <input type="text" class="form-control" id="Login" name="Login" placeholder="Insira o login do instrutor" asp-for="Login" required />
-    </div>
-    
-        
+    <div class="divDuasColunas">
         <div class="form-group div">
             <label for="Perfil">Perfil</label>
-        <select class="form-control" id="Perfil" name="Perfil" required>
-                <option value="">Selecione o perfil</option>
+            <select class="form-control" id="Perfil" name="Perfil" required>
+                <option value="" selected>Selecione o perfil</option>
                 @foreach (string perfil in ViewBag.Perfis)
                 {
-                string isSelected = Model != null && perfil == Model.Perfil ? "selected" : "";
+                    string isSelected = Model != null && perfil == Model.Perfil ? "selected" : "";
                     if (!string.IsNullOrEmpty(isSelected))
                     {
                         <option value="@perfil" selected>@perfil</option>
@@ -41,26 +32,75 @@
             </select>
         </div>
         <div class="form-group div">
-            
-            <button type="button" class="btn-custom" data-bs-toggle="modal" data-bs-target="#modalRedefinirSenha">
-                Inserir Senha
-            </button>
-            @await Html.PartialAsync("ModalSenha", Model)
-            <input asp-for="Senha" type="hidden" id="Senha" />
+            <label for="CPF">CPF</label>
+            @if (Model == null || Model.Cpf == "")
+            {
+                <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" oninput="formatarCPF(this)" required />
+            }
+            else
+            {
+                <input type="text" class="form-control" id="CPF" name="CPF" placeholder="Insira o CPF" asp-for="Cpf" maxlength="14" disabled />
+            }
         </div>
-   
-    <div class="form-group div">
-        <label for="Email">E-mail</label>
-        <input type="email" class="form-control" id="Email" name="Email" placeholder="Insira o e-mail" asp-for="Email" data-mask="email" required />
     </div>
+
+
+
+
     <div class="form-group div">
-        <label for="Telefone">Celular</label>
-        <input type="tel" class="form-control" id="Telefone" name="Telefone" placeholder="Insira o número de celular" asp-for="Telefone" required />
+
+        <button type="button" class="btn-custom" data-bs-toggle="modal" data-bs-target="#modalRedefinirSenha">
+            Inserir Senha
+        </button>
+        @await Html.PartialAsync("ModalSenha", Model)
+        <input asp-for="Senha" type="hidden" id="Senha" />
+    </div>
+
+    <div class="divDuasColunas">
+        <div class="form-group div">
+            <label for="Email">E-mail</label>
+            <input type="email" class="form-control" id="Email" name="Email" placeholder="Insira o e-mail" asp-for="Email" data-mask="email" required />
+        </div>
+        <div class="form-group div">
+            <label for="Telefone">Celular</label>
+            <input type="tel" class="form-control" id="Telefone" name="Telefone" placeholder="Insira o número de celular" maxlength="15" asp-for="Telefone" oninput="formatarTelefone(this)" required />
+        </div>
     </div>
     <div class="divDuasColunas divBotoes">
-        <button type="button" class="btn-custom" onclick="submitForm()">Salvar</button>
-        <div></div>
-        <div></div>
+        <button type="button" class="btn-custom" id="btnSalvar" onclick="submitForm()">Salvar</button>
         <button type="button" class="btn-custom" onclick="location.href='/Instrutor/Instrutores'">Voltar</button>
     </div>
 </div>
+
+<script>
+    function formatarCPF(input) {
+        let value = input.value.replace(/\D/g, '');
+
+        if (value.length <= 3) {
+            input.value = value;
+        } else if (value.length <= 6) {
+            input.value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+        } else if (value.length <= 9) {
+            input.value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+        } else {
+            input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+        }
+    }
+
+
+    function formatarTelefone(input) {
+        let value = input.value.replace(/\D/g, '');
+
+        if (value.length > 11) value = value.slice(0, 11);
+
+        if (value.length <= 10) {
+            value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else {
+            value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        }
+
+        input.value = value;
+    }
+
+</script>
+

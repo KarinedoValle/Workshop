@@ -33,7 +33,15 @@
       }
 
     document.getElementById("Senha").value = novaSenha;
-      const modal = bootstrap.Modal.getInstance(document.getElementById("modalRedefinirSenha"));
+
+      const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalRedefinirSenha"));
+    
       modal.hide();
+      console.log("Modal fechado");
+      setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style = ''; 
+    }, 300);
     }
 </script>

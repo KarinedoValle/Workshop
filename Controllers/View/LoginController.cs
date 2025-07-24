@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 
 namespace Workshop.Controllers.View
@@ -80,6 +81,14 @@ namespace Workshop.Controllers.View
             ViewBag.Message = "Usuário ou senha inválidos";
             return View();
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            Response.Cookies.Delete("AuthToken");
+            return RedirectToAction("Logar", "Login");
+        }
+
     }
 }
