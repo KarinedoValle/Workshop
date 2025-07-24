@@ -66,6 +66,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 }
 
                 return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                context.HandleResponse(); 
+                context.Response.Redirect("/Erro/401");
+                return Task.CompletedTask;
             }
         };
 
@@ -97,7 +103,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Deve vir antes do UseAuthorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -122,6 +128,8 @@ app.UseSwaggerUI(c =>
 
 
 app.MapControllers();
+
+app.UseStatusCodePagesWithReExecute("/Erro/{0}");
 
 app.Run();
 

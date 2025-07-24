@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using Workshop.DB;
 using Workshop.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,11 +57,17 @@ namespace Workshop.Controllers.API
         [HttpPost]
         public ActionResult Post([FromBody] WorkshopRequest workshop)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(instrutor => instrutor.Cpf == Instrutor.FormatCpf(workshop.InstrutorCpf));
             if (Instrutor == null)
-                return NotFound($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
+                return BadRequest($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
 
             Models.Workshop workshopModelo = Models.Workshop.ConverteParaModelo(workshop, Instrutor);
+
+            if(!ValidarHorarioComercial(workshopModelo.Datas))
+                return BadRequest("Não é possível cadastrar encontros fora do horário comercial (Entre 8h e 19h)");
 
             _context.Workshop.Add(workshopModelo);
 
@@ -70,6 +78,8 @@ namespace Workshop.Controllers.API
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] WorkshopRequest workshop)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             Models.Workshop? workshopEncontrado = _context.Workshop.Find(id);
             if (workshopEncontrado == null)
@@ -77,10 +87,12 @@ namespace Workshop.Controllers.API
 
             Instrutor? Instrutor = _context.Instrutor.FirstOrDefault(instrutor => instrutor.Cpf == Instrutor.FormatCpf(workshop.InstrutorCpf));
             if (Instrutor == null)
-                return NotFound($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
+                return BadRequest($"Instrutor com CPF {workshop.InstrutorCpf} não encontrado.");
 
             Models.Workshop workshopModelo = Models.Workshop.ConverteParaModelo(workshop, Instrutor, workshopEncontrado.ID);
 
+            if (!ValidarHorarioComercial(workshopModelo.Datas))
+                return BadRequest("Não é possível cadastrar encontros fora do horário comercial (Entre 8h e 19h)");
             _context.Entry(workshopEncontrado).State = EntityState.Detached;
 
             _context.Entry(workshopModelo).State = EntityState.Modified;
@@ -102,6 +114,14 @@ namespace Workshop.Controllers.API
             _context.SaveChanges();
             return NoContent();
 
+        }
+
+        public bool ValidarHorarioComercial(List<DateTime>? datas)
+        {
+            if (datas == null || datas.Count == 0)
+                return true;
+
+            return !datas.Any(data => data.TimeOfDay < TimeSpan.FromHours(8) || data.TimeOfDay > TimeSpan.FromHours(19));
         }
     }
 }

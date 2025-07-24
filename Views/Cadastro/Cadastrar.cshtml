@@ -29,10 +29,6 @@
                 Status: checkField(document.getElementById('Status'))
             };
 
-            if(!validaWorkshopCamposPrincipais(formData)){
-                alert("Não foi possível salvar as informações.");
-                return;
-            }
 
             fetch('/api/Workshop', {
                 method: 'POST',
@@ -40,12 +36,33 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
+            }).then(response =>{
+                if (response.status === 400) {
+                     const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
+                        return response.json().then(errorData => {                           
+                                const erros = errorData.errors;
+                                const mensagens = [];
+
+                                for (let campo in erros) {
+                                    mensagens.push(erros[campo][0]);
+                                }
+                                alert(mensagens.join('\n')); 
+                                throw new Error(mensagens.join('\n'));                 
+                        });
+                    }
+                    response.text().then(errorText => {
+                            alert(`${errorText}`);
+                            throw new Error(errorText);
+                    });               
+                }
+                return response.json();
             })
-            .then(response => response.json())
             .then(data => {
                 window.location.href = '/Home/Workshops';
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Erro:', error));
         }
+
     </script>
 }

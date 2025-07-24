@@ -7,11 +7,11 @@ namespace Workshop.Controllers.View
 {
     [Authorize]
     [Route("Instrutor")]
-    public class InstrutorController : Controller
+    public class InstrutrController : Controller
     {
-        private readonly ILogger<InstrutorController> _logger;
+        private readonly ILogger<InstrutrController> _logger;
         private readonly AppDbContext _context;
-        public InstrutorController(ILogger<InstrutorController> logger, AppDbContext context)
+        public InstrutrController(ILogger<InstrutrController> logger, AppDbContext context)
         {
             _logger = logger;
             _context = context;

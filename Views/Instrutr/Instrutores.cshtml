@@ -43,7 +43,7 @@
                                 <td>${item.email}</td>
                                 <td>${item.telefone}</td>
                                 <td><i class="fas fa-edit" onclick="editarItem('${item.cpf}')"></i></td>
-                                <td><i class="fas fa-trash-alt" onclick="deletarItem('${item.cpf}')"></i></td>
+                                <td><i class="fas fa-trash-alt" onclick="deletarItem('${item.cpf}','${item.nome}')"></i></td>
                             </tr>
                         `);
                     });
@@ -64,7 +64,10 @@
         }
 
 
-        function deletarItem(cpf) {
+        function deletarItem(cpf, nome) {
+                    if (!confirm(`Deseja deletar o instrutor: ${nome}?`)) {
+                        return;
+                    }
                     fetch(`/api/Instrutor/${cpf}`, {
                         method: 'DELETE'
                     })
@@ -72,7 +75,9 @@
                         if (response.ok) {
                             document.querySelector(`tr[data-id="${cpf}"]`).remove();
                         } else {
-                            alert("Erro ao deletar Instrutor.");
+                             return response.text().then(errorText => {
+                                alert(`${errorText}`);
+                            });
                         }
                     })
                     .catch(error => console.error("Erro:", error));

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 public static class EnumExtensions
@@ -31,6 +32,36 @@ public static class EnumExtensions
         return typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static)
         .Select(f => f.GetCustomAttribute<DescriptionAttribute>()?.Description ?? f.Name)
         .ToList();
+    }
+
+
+}
+
+public class EnumValidoAttribute : ValidationAttribute
+{
+
+    private readonly Type _enumType;
+
+    public EnumValidoAttribute(Type enumType)
+    {
+        if (!enumType.IsEnum)
+            throw new ArgumentException("O tipo fornecido não é um enum.");
+
+        _enumType = enumType;
+    }
+
+
+    public override bool IsValid(object value)
+    {
+        if (value == null) return false;
+
+        if (value is not string descricao) return false;
+
+        var valido = Enum.GetValues(_enumType)
+                         .Cast<Enum>()
+                         .Any(e => e.GetDescription() == descricao);
+
+        return valido;
     }
 
 
