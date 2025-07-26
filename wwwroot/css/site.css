@@ -84,7 +84,6 @@ body {
 .divBotoes {
     padding-top: 20px;
     display: flex;
-    /*grid-template-columns: 1fr 1fr 1fr 1fr;*/
     justify-content: right;
     margin-top: 40px;
     
@@ -134,6 +133,15 @@ select {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 16px;
+}
+
+.table-container {
+    max-height: 500px; 
+    overflow-y: auto;
+}
+
+.table-container table {
+    margin-bottom: 0; /* Remove o espaço extra da tabela dentro do container */
 }
 
 

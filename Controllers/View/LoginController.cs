@@ -32,24 +32,24 @@ namespace Workshop.Controllers.View
         [HttpPost]
         public IActionResult Logar(string username, string password)
         {
-            var instrutor = _context.Instrutor.FirstOrDefault(i => i.Login == username);
+            var Usuario = _context.Usuario.FirstOrDefault(i => i.Login == username);
 
-            if (instrutor == null)
+            if (Usuario == null)
             {
                 ViewBag.Message = "Usuário ou senha inválidos";
                 return View();
             }
 
-            var hasher = new PasswordHasher<Instrutor>();
-            var result = hasher.VerifyHashedPassword(instrutor, instrutor.Senha, password);
+            var hasher = new PasswordHasher<Usuario>();
+            var result = hasher.VerifyHashedPassword(Usuario, Usuario.Senha, password);
 
             if (result == PasswordVerificationResult.Success) {
 
                 var claims = new[]
                         {
-                    new Claim(ClaimTypes.Name, instrutor.Login),
-                    new Claim("Cpf", instrutor.Cpf.ToString()),
-                    new Claim("Perfil", instrutor.Perfil)
+                    new Claim(ClaimTypes.Name, Usuario.Login),
+                    new Claim("Cpf", Usuario.Cpf.ToString()),
+                    new Claim("Perfil", Usuario.Perfil)
                 };
 
                 var creds = new SigningCredentials(_jwtKey, SecurityAlgorithms.HmacSha256);

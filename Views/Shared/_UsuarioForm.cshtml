@@ -1,35 +1,55 @@
-﻿@model Instrutor
+﻿@using Workshop.Enums
+@model Usuario
 
 
 <div class="divFormulario">
     <div class="divDuasColunas">
         <div class="form-group div">
             <label for="Nome">Nome</label>
-            <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do instrutor" asp-for="Nome" required />
+            <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do Usuario" asp-for="Nome" required />
         </div>
         <div class="form-group div">
             <label for="Login">Login</label>
-            <input type="text" class="form-control" id="Login" name="Login" placeholder="Insira o login do instrutor" asp-for="Login" required />
+            <input type="text" class="form-control" id="Login" name="Login" placeholder="Insira o login do Usuario" asp-for="Login" required />
         </div>
     </div>
     <div class="divDuasColunas">
         <div class="form-group div">
             <label for="Perfil">Perfil</label>
-            <select class="form-control" id="Perfil" name="Perfil" required>
-                <option value="" selected>Selecione o perfil</option>
-                @foreach (string perfil in ViewBag.Perfis)
-                {
-                    string isSelected = Model != null && perfil == Model.Perfil ? "selected" : "";
-                    if (!string.IsNullOrEmpty(isSelected))
+            @{
+                bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Perfil.Administrador.GetDescription());
+            }
+            @if (admin)
+            {
+                <select class="form-control" id="Perfil" name="Perfil" required>
+                    <option value="" selected>Selecione o perfil</option>
+                    @foreach (string perfil in ViewBag.Perfis)
                     {
-                        <option value="@perfil" selected>@perfil</option>
+                        string isSelected = Model != null && perfil == Model.Perfil ? "selected" : "";
+                        if (!string.IsNullOrEmpty(isSelected))
+                        {
+                            <option value="@perfil" selected>@perfil</option>
+                        }
+                        else
+                        {
+                            <option value="@perfil">@perfil</option>
+                        }
                     }
-                    else
+                </select>
+            }
+            else
+            {
+                <select class="form-control" id="Perfil" name="Perfil" disabled>
+                    @foreach (string perfil in ViewBag.Perfis)
                     {
-                        <option value="@perfil">@perfil</option>
+                        string isSelected = Model != null && perfil == Model.Perfil ? "selected" : "";
+                        if (!string.IsNullOrEmpty(isSelected))
+                        {
+                            <option value="@perfil" selected>@perfil</option>
+                        }
                     }
-                }
-            </select>
+                </select>
+            }
         </div>
         <div class="form-group div">
             <label for="CPF">CPF</label>
@@ -48,10 +68,7 @@
 
 
     <div class="form-group div">
-
-        <button type="button" class="btn-custom" data-bs-toggle="modal" data-bs-target="#modalRedefinirSenha">
-            Inserir Senha
-        </button>
+        <button type="button" class="btn-custom" onclick="abrirModalSenha()">Inserir Senha</button>
         @await Html.PartialAsync("ModalSenha", Model)
         <input asp-for="Senha" type="hidden" id="Senha" />
     </div>
@@ -68,7 +85,7 @@
     </div>
     <div class="divDuasColunas divBotoes">
         <button type="button" class="btn-custom" id="btnSalvar" onclick="submitForm()">Salvar</button>
-        <button type="button" class="btn-custom" onclick="location.href='/Instrutor/Instrutores'">Voltar</button>
+        <button type="button" class="btn-custom" onclick="location.href='/Usuario/Usuarios'">Voltar</button>
     </div>
 </div>
 
@@ -90,16 +107,26 @@
 
     function formatarTelefone(input) {
         let value = input.value.replace(/\D/g, '');
-
-        if (value.length > 11) value = value.slice(0, 11);
+        if (value.length > 11) 
+        value = value.slice(0, 11);
 
         if (value.length <= 10) {
             value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
         } else {
             value = value.replace(/^(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
         }
-
         input.value = value;
+    }
+
+    function abrirModalSenha() {
+        const modalElement = document.getElementById("modalRedefinirSenha");
+        const existingModal = bootstrap.Modal.getInstance(modalElement);
+        if (existingModal) {
+            existingModal.dispose();
+        }
+
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
     }
 
 </script>

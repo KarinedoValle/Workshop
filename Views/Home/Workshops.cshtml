@@ -1,5 +1,10 @@
-﻿@{
+﻿@using Workshop.Enums
+@{
     ViewData["Title"] = "Workshops";
+    // var perfil = User.Claims.FirstOrDefault(c => c.Type == "Perfil")?.Value;
+    // var CPF = User.Claims.FirstOrDefault(c => c.Type == "Cpf")?.Value;
+    // bool isAdmin = perfil == Perfil.Administrador.GetDescription();
+    // bool isLeitor = perfil == Perfil.Leitor.GetDescription();
 }
 
 <div class="text-center">
@@ -7,7 +12,7 @@
 </div>
 
 <div class="text-end div">
-    <button class="btn-custom" onclick="cadastrarItem()")>Adicionar</button>
+    <button class="btn-custom" onclick="cadastrarItem()" )>Adicionar</button>
 </div>
 
 
@@ -36,7 +41,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            fetch('/api/workshop') 
+            fetch('/api/workshop')
                 .then(response => response.json())
                 .then(data => {
                     const container = $('#data-container');
@@ -51,7 +56,7 @@
                                 <td>${item.categoria}</td>
                                 <td>${item.modalidade}</td>
                                 <td>${formattedDates}</td>
-                                <td>${item.instrutor.nome}</td>
+                                <td>${item.usuario.nome}</td>
                                 <td>${item.status}</td>
                                 <td><i class="fas fa-edit" onclick="editarItem(${item.id})"></i></td>
                                 <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id}, '${item.nome}')"></i></td>
@@ -76,21 +81,38 @@
 
 
         function deletarItem(id, nome) {
-                    if (!confirm(`Deseja deletar o workshop: ${nome}?`)) {
-                        return;
-                    }
-                    fetch(`/api/workshop/${id}`, {
-                        method: 'DELETE'
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            document.querySelector(`tr[data-id="${id}"]`).remove();
-                        } else {
-                           alert("Erro ao deletar workshop.");
-                        }
-                    })
-                    .catch(error => console.error("Erro:", error));
-                }
+            if (!confirm(`Deseja deletar o workshop: ${nome}?`)) {
+                return;
+            }
+            fetch(`/api/workshop/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector(`tr[data-id="${id}"]`).remove();
+                } else {
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
+                        return response.json().then(errorData => {
+                            const erros = errorData.errors;
+                            const mensagens = [];
 
+                            for (let campo in erros) {
+                                mensagens.push(erros[campo][0]);
+                            }
+
+                            alert(mensagens.join('\n'));
+                            throw new Error(mensagens.join('\n'));
+                        });
+                    }
+                    response.text().then(errorText => {
+                    alert(`${errorText}`);
+                    throw new Error(errorText);
+                    });
+                    throw new Error("Erro");
+                }
+            })
+            .catch(error => console.error("Erro:", error));
+        }
     </script>
 }

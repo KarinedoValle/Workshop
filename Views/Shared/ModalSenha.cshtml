@@ -16,32 +16,34 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-custom" onclick="salvarSenha()">Salvar</button>
+                <button type="button" class="btn-custom" onclick="SalvarSenha()">Salvar</button>
                 <button type="button" class="btn-custom" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function salvarSenha() {
-      const novaSenha = document.getElementById("NovaSenhaModal").value;
-      const confirmarSenha = document.getElementById("ConfirmarSenhaModal").value;
+    function SalvarSenha() {
+        const novaSenha = document.getElementById("NovaSenhaModal").value;
+        const confirmarSenha = document.getElementById("ConfirmarSenhaModal").value;
 
-      if (novaSenha !== confirmarSenha) {
-        alert("As senhas não coincidem.");
-        return;
-      }
+        if (novaSenha !== confirmarSenha) {
+            alert("As senhas não coincidem.");
+            return;
+        }
 
-    document.getElementById("Senha").value = novaSenha;
+        document.getElementById("Senha").value = novaSenha;
 
-      const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalRedefinirSenha"));
-    
-      modal.hide();
-      console.log("Modal fechado");
-      setTimeout(() => {
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style = ''; 
-    }, 300);
+        const modalElement = document.getElementById("modalRedefinirSenha");
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+
+        if (modalInstance) {
+            modalInstance.hide();
+            modalElement.addEventListener('hidden.bs.modal', () => {
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style = '';
+            }, { once: true });
+        }
     }
 </script>

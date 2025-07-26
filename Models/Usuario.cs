@@ -6,7 +6,7 @@ using Workshop.Enums;
 
 namespace Workshop.Models
 {
-    public class Instrutor
+    public class Usuario
     {
         [Key]
         [Required(ErrorMessage = "O CPF é obrigatório.")]

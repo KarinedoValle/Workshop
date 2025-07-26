@@ -12,17 +12,14 @@ namespace Workshop.Models
 
         public List<DateTime> Datas { get; set; }
 
-       [Required(ErrorMessage = "O instrutor é obrigatório.")]
-        public string InstrutorCpf { get; set; }
+       [Required(ErrorMessage = "O Usuario é obrigatório.")]
+        public string UsuarioCpf { get; set; }
 
        [Required(ErrorMessage = "A categoria é obrigatório.")]
         public string Categoria { get; set; }
 
         [Required(ErrorMessage = "A modalidade é obrigatório.")]
         public string Modalidade { get; set; }
-
-        [Required(ErrorMessage = "O status é obrigatório.")]
-        public string Status { get; set; }
 
     }
 }

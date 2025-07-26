@@ -15,21 +15,23 @@ namespace Workshop.Migrations
         {
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Workshop\";");
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Instrutor\";");
+            migrationBuilder.Sql("DROP TABLE IF EXISTS \"Usuario\";");
+
             migrationBuilder.CreateTable(
-                name: "Instrutor",
+                name: "Usuario",
                 columns: table => new
                 {
                     Cpf = table.Column<string>(type: "text", nullable: false),
+                    Senha = table.Column<string>(type: "text", nullable: false),
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Login = table.Column<string>(type: "text", nullable: false),
-                    Senha = table.Column<string>(type: "text", nullable: false),
                     Telefone = table.Column<string>(type: "text", nullable: false),
                     Perfil = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Instrutor", x => x.Cpf);
+                    table.PrimaryKey("PK_Usuario", x => x.Cpf);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,8 +42,8 @@ namespace Workshop.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Descricao = table.Column<string>(type: "text", nullable: false),
+                    UsuarioCpf = table.Column<string>(type: "text", nullable: false),
                     Datas = table.Column<List<DateTime>>(type: "timestamp with time zone[]", nullable: false),
-                    InstrutorCpf = table.Column<string>(type: "text", nullable: true),
                     Categoria = table.Column<string>(type: "text", nullable: false),
                     Modalidade = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false)
@@ -50,16 +52,17 @@ namespace Workshop.Migrations
                 {
                     table.PrimaryKey("PK_Workshop", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Workshop_Instrutor_InstrutorCpf",
-                        column: x => x.InstrutorCpf,
-                        principalTable: "Instrutor",
-                        principalColumn: "Cpf");
+                        name: "FK_Workshop_Usuario_UsuarioCpf",
+                        column: x => x.UsuarioCpf,
+                        principalTable: "Usuario",
+                        principalColumn: "Cpf",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Workshop_InstrutorCpf",
+                name: "IX_Workshop_UsuarioCpf",
                 table: "Workshop",
-                column: "InstrutorCpf");
+                column: "UsuarioCpf");
             migrationBuilder.Sql(InserirAdministrador());
         }
 
@@ -70,7 +73,7 @@ namespace Workshop.Migrations
                 name: "Workshop");
 
             migrationBuilder.DropTable(
-                name: "Instrutor");
+                name: "Usuario");
         }
 
         private string InserirAdministrador()
@@ -78,14 +81,14 @@ namespace Workshop.Migrations
             //Login: Admin
             //Senha: Admin
             return @"
-         INSERT INTO ""Instrutor"" (""Cpf"", ""Nome"", ""Email"", ""Login"", ""Senha"", ""Telefone"", ""Perfil"")
+         INSERT INTO ""Usuario"" (""Cpf"", ""Nome"", ""Email"", ""Login"", ""Senha"", ""Telefone"", ""Perfil"")
          VALUES (
              '958.854.486-63',
              'Administrador',
              'admin@workshop.com',
              'Admin',
              'AQAAAAIAAYagAAAAEHFmTj244LrioF2lYGv3T5jIXv8f6P+EiNb+Ca8YUA+W+ooUdHSkddUIsUvsqBByOg==',
-             '(81)99508-9677',
+             '(81) 99508-9677',
              'Administrador'
          );
      ";

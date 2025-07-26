@@ -23,7 +23,7 @@ namespace Workshop.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Workshop.Models.Instrutor", b =>
+            modelBuilder.Entity("Workshop.Models.Usuario", b =>
                 {
                     b.Property<string>("Cpf")
                         .HasColumnType("text");
@@ -55,7 +55,7 @@ namespace Workshop.Migrations
 
                     b.HasKey("Cpf");
 
-                    b.ToTable("Instrutor");
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("Workshop.Models.Workshop", b =>
@@ -79,9 +79,6 @@ namespace Workshop.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("InstrutorCpf")
-                        .HasColumnType("text");
-
                     b.Property<string>("Modalidade")
                         .IsRequired()
                         .HasColumnType("text")
@@ -96,20 +93,26 @@ namespace Workshop.Migrations
                         .HasColumnType("text")
                         .HasColumnName("Status");
 
+                    b.Property<string>("UsuarioCpf")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("InstrutorCpf");
+                    b.HasIndex("UsuarioCpf");
 
                     b.ToTable("Workshop");
                 });
 
             modelBuilder.Entity("Workshop.Models.Workshop", b =>
                 {
-                    b.HasOne("Workshop.Models.Instrutor", "Instrutor")
+                    b.HasOne("Workshop.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("InstrutorCpf");
+                        .HasForeignKey("UsuarioCpf")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Instrutor");
+                    b.Navigation("Usuario");
                 });
 #pragma warning restore 612, 618
         }

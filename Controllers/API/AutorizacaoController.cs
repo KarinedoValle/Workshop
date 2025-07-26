@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Workshop.DB;
 using Workshop.Models;
 
@@ -29,18 +25,18 @@ namespace Workshop.Controllers.API
         [HttpPost("token")]
         public IActionResult Token([FromForm] Token request)
         {
-            var instrutor = _context.Instrutor.FirstOrDefault(i => i.Perfil == request.Profile);
+            var Usuario = _context.Usuario.FirstOrDefault(i => i.Perfil == request.Profile);
 
-            if (instrutor == null)
+            if (Usuario == null)
             {
                 return Unauthorized(new { error = "Perfil inválido." });
             }
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, instrutor.Login),
-                new Claim("Cpf", instrutor.Cpf.ToString()),
-                new Claim("Perfil", instrutor.Perfil)
+                new Claim(ClaimTypes.Name, Usuario.Login),
+                new Claim("Cpf", Usuario.Cpf.ToString()),
+                new Claim("Perfil", Usuario.Perfil)
             };
 
             var creds = new SigningCredentials(_jwtKey, SecurityAlgorithms.HmacSha256);

@@ -11,8 +11,6 @@ namespace Workshop.Enums
         [Description("Em Andamento")]
         EmAndamento,
         [Description("Concluído")]
-        Concluido,
-        [Description("Cancelado")]
-        Cancelado
+        Concluido
     }
 }

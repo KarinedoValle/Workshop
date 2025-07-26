@@ -31,7 +31,7 @@ namespace Workshop.Models
         public string Descricao { get; set; }
 
         [Required(ErrorMessage = "O instrutor é obrigatório.")]
-        public Instrutor Instrutor { get; set; }
+        public Usuario Usuario { get; set; }
 
         public List<DateTime> Datas
         {
@@ -103,8 +103,6 @@ namespace Workshop.Models
 
         [Column("Status")]
         [JsonProperty("Status")]
-        [Required(ErrorMessage = "O status é obrigatório.")]
-        [EnumValido(typeof(Status), ErrorMessage = "O status é obrigatório.")]
         public string Status
         {
             get => StatusEnum?.GetDescription() ?? string.Empty;
@@ -128,7 +126,7 @@ namespace Workshop.Models
             }
         }
 
-        public static Workshop ConverteParaModelo(WorkshopRequest request, Instrutor Instrutor, int? id = null) {
+        public static Workshop ConverteParaModelo(WorkshopRequest request, Usuario Usuario, int? id = null) {
             if (id.HasValue) {
                 return new Workshop
                 {
@@ -136,10 +134,9 @@ namespace Workshop.Models
                     Nome = request.Nome,
                     Descricao = request.Descricao,
                     Datas = request.Datas,
-                    Instrutor = Instrutor,
+                    Usuario = Usuario,
                     Categoria = request.Categoria,
-                    Modalidade = request.Modalidade,
-                    Status = request.Status
+                    Modalidade = request.Modalidade
                 }; 
             }
             return new Workshop
@@ -147,10 +144,9 @@ namespace Workshop.Models
                 Nome = request.Nome,
                 Descricao = request.Descricao,
                 Datas = request.Datas,
-                Instrutor = Instrutor,
+                Usuario = Usuario,
                 Categoria = request.Categoria,
-                Modalidade = request.Modalidade,
-                Status = request.Status
+                Modalidade = request.Modalidade
             };
         }
 

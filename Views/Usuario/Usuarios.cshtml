@@ -1,0 +1,101 @@
+﻿@using Workshop.Enums
+@{
+    ViewData["Title"] = "Usuarios";
+}
+<div class="text-center">
+    <h1 class="display-4">Usuários</h1>
+</div>
+
+<div class="text-end div">
+    <button class="btn-custom" onclick="cadastrarItem()" )>Adicionar</button>
+</div>
+<div class="text-center">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="data-container">
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            fetch('/api/Usuario')
+            .then(response => response.json())
+            .then(data => {
+                const container = $('#data-container');
+                container.empty();
+                data.forEach(item => {
+                    container.append(`
+                    <tr data-id="${item.cpf}">
+                    <td>${item.nome}</td>
+                    <td>${item.email}</td>
+                    <td>${item.telefone}</td>
+                    <td><i class="fas fa-edit" onclick="editarItem('${item.cpf}')"></i></td>
+                    <td><i class="fas fa-trash-alt" onclick="deletarItem('${item.cpf}','${item.nome}')"></i></td>
+                    </tr>
+                    `);
+                });
+            })
+            .catch(error => {
+            console.error('Erro ao buscar dados:', error);
+            container.append('<tr><td colspan="7">Erro ao buscar dados</td></tr>');
+            });
+        });
+
+
+        function editarItem(cpfParametro) {
+            window.location.href = `/Usuario/Usuario/${encodeURIComponent(cpfParametro)}`;
+        }
+
+        function cadastrarItem() {
+            window.location.href = '/Usuario/Cadastrar';
+        }
+
+
+        function deletarItem(cpf, nome) {
+            if (!confirm(`Deseja deletar o Usuário: ${nome}?`)) {
+                return;
+            }
+
+            fetch(`/api/Usuario/${cpf}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector(`tr[data-id="${cpf}"]`).remove();
+                } else {
+                    const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
+                        return response.json().then(errorData => {
+                            const erros = errorData.errors;
+                            const mensagens = [];
+
+                            for (let campo in erros) {
+                                mensagens.push(erros[campo][0]);
+                            }
+
+                            alert(mensagens.join('\n'));
+                            throw new Error(mensagens.join('\n'));
+                        });
+                    }
+                    response.text().then(errorText => {
+                        alert(`${errorText}`);
+                        throw new Error(errorText);
+                    });
+                    throw new Error("Erro");
+                }
+            })
+            .catch(error => console.error("Erro:", error));
+        }
+    </script>
+}

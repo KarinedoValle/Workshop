@@ -4,7 +4,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Cadastro</h1>
+    <h1 class="display-4">Cadastrar Workshop</h1>
 </div>
 
 <form id="cadastroForm" asp-action="Cadastrar" method="post" asp-controller="Cadastro">
@@ -15,7 +15,7 @@
     <script>
 
         function submitForm() {
-            
+
             const dateFields = document.querySelectorAll('p[name="Datas"]');
             const dates = Array.from(dateFields).map(field => new Date(field.id).toISOString());
             const formData = {
@@ -23,10 +23,9 @@
                 Nome: checkField(document.getElementById('Nome')),
                 Descricao: checkField(document.getElementById('Descricao')),
                 Datas: dates,
-                InstrutorCpf: checkField(document.getElementById('Instrutor')),
+                UsuarioCpf: checkField(document.getElementById('Usuario')),
                 Categoria: checkField(document.getElementById('Categoria')),
-                Modalidade: checkField(document.getElementById('Modalidade')),
-                Status: checkField(document.getElementById('Status'))
+                Modalidade: checkField(document.getElementById('Modalidade'))
             };
 
 
@@ -37,26 +36,26 @@
                 },
                 body: JSON.stringify(formData)
             }).then(response =>{
-                if (response.status === 400) {
+                if (!response.ok) {
                      const contentType = response.headers.get('Content-Type');
                     if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
-                        return response.json().then(errorData => {                           
+                        return response.json().then(errorData => {
                                 const erros = errorData.errors;
                                 const mensagens = [];
 
                                 for (let campo in erros) {
                                     mensagens.push(erros[campo][0]);
                                 }
-                                alert(mensagens.join('\n')); 
-                                throw new Error(mensagens.join('\n'));                 
+                                alert(mensagens.join('\n'));
+                                throw new Error(mensagens.join('\n'));
                         });
                     }
                     response.text().then(errorText => {
                             alert(`${errorText}`);
                             throw new Error(errorText);
-                    });               
+                    });
+                    throw new Error("Erro");
                 }
-                return response.json();
             })
             .then(data => {
                 window.location.href = '/Home/Workshops';

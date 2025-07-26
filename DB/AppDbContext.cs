@@ -13,7 +13,7 @@ namespace Workshop.DB
 
 
         public DbSet<Models.Workshop> Workshop { get; set; }
-        public DbSet<Instrutor> Instrutor { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

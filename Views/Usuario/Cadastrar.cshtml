@@ -1,21 +1,21 @@
-﻿@model Instrutor
+﻿@model Usuario
 @{
     ViewData["Title"] = "Cadastro";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Cadastro</h1>
+    <h1 class="display-4">Cadastrar Usuário</h1>
 </div>
 
-<form id="cadastroForm" asp-action="Cadastrar" method="post" asp-controller="Instrutr">
-    @Html.Partial("_InstrutorForm", Model)
+<form id="cadastroForm" asp-action="Cadastrar" method="post" asp-controller="Usuario">
+    @Html.Partial("_UsuarioForm", Model)
 </form>
 
 @section Scripts {
     <script>
 
         function submitForm() {
-            
+
             const formData = {
 
                 Nome: checkField(document.getElementById('Nome')),
@@ -28,37 +28,38 @@
             };
 
 
-            fetch('/api/Instrutor', {
+            fetch('/api/Usuario', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
             }).then(response =>{
-                if (response.status === 400) {
-                    return response.json().then(errorData => {
-                        const erros = errorData.errors;
-                        const mensagens = [];
+                if (!response.ok) {
+                     const contentType = response.headers.get('Content-Type');
+                    if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
+                        return response.json().then(errorData => {
+                            const erros = errorData.errors;
+                            const mensagens = [];
 
-                        for (let campo in erros) {
-                            mensagens.push(erros[campo][0]); 
-                        }
+                            for (let campo in erros) {
+                                mensagens.push(erros[campo][0]);
+                            }
 
-                        alert(mensagens.join('\n')); 
-                        throw new Error(mensagens.join('\n'));
-                    });
-                }
-                if(!response.status.ok){
-                    response.text().then(errorText => {
+                            alert(mensagens.join('\n'));
+                            throw new Error(mensagens.join('\n'));
+                        });
+                    }
+                     response.text().then(errorText => {
                             alert(`${errorText}`);
                             throw new Error(errorText);
                     });
+
+                   throw new Error("Erro");
                 }
-                 
-                return response.text();
             })
             .then(data => {
-                window.location.href = '/Instrutor/Instrutores';
+                window.location.href = '/Usuario/Usuarios';
             })
             .catch(error => console.error('Erro:', error));
         }

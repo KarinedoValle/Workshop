@@ -1,8 +1,9 @@
-﻿@model Workshop
+﻿@using Workshop.Enums
+@model Workshop
 
 <div class="divFormulario">
     <div class="form-group div">
-        <label for="Nome">Nome</label>
+        <label for="Nome">Título</label>
         <input type="text" class="form-control" id="Nome" name="Nome" placeholder="Insira o nome do workshop" asp-for="Nome" required />
     </div>
     <div class="form-group div">
@@ -20,7 +21,8 @@
                 <button type="button" class="btn-custom" onclick="addDateField()">Adicionar Data</button>
             </div>
             <div id="datasContainer">
-                @if(Model != null){
+                @if (Model != null)
+                {
                     @foreach (DateTime data in Model.Datas)
                     {
                         <script>
@@ -38,18 +40,20 @@
         <div class="form-group div">
             <label for="Categoria">Categoria</label>
             <select class="form-control" id="Categoria" name="Categoria" required>
-                    <option value="">Selecione a categoria</option>
-                    @foreach (string categoria in ViewBag.Categorias)
+                <option value="">Selecione a categoria</option>
+                @foreach (string categoria in ViewBag.Categorias)
+                {
+                    string isSelected = Model != null && categoria == Model.Categoria ? "selected" : "";
+                    if (!string.IsNullOrEmpty(isSelected))
                     {
-                        string isSelected = Model != null && categoria == Model.Categoria ? "selected" : "";
-                        if (!string.IsNullOrEmpty(isSelected)) { 
-                            <option value="@categoria" selected>@categoria</option>
-                        }
-                        else{
-                            <option value="@categoria">@categoria</option>
-                        }
+                        <option value="@categoria" selected>@categoria</option>
                     }
-                </select>
+                    else
+                    {
+                        <option value="@categoria">@categoria</option>
+                    }
+                }
+            </select>
         </div>
         <div class="form-group div">
             <label for="Modalidade">Modalidade</label>
@@ -59,9 +63,11 @@
                 {
                     string isSelected = Model != null && modalidade == Model.Modalidade ? "selected" : "";
                     if (!string.IsNullOrEmpty(isSelected))
-                    { 
+                    {
                         <option value="@modalidade" selected>@modalidade</option>
-                    } else{
+                    }
+                    else
+                    {
                         <option value="@modalidade">@modalidade</option>
                     }
                 }
@@ -71,43 +77,47 @@
 
     <div class="divDuasColunas">
         <div class="form-group div">
-            <label for="Instrutor">Instrutor</label>
-            <select class="form-control" id="Instrutor" name="Instrutor.cpf" asp-for="Instrutor" required>
-                <option value="">Selecione o Instrutor</option>
-                @foreach (Instrutor Instrutor in ViewBag.Instrutores)
-                {
-                    string isSelected = Model != null && Instrutor.Cpf == Model.Instrutor.Cpf ? "selected" : "";
-                    if (!string.IsNullOrEmpty(isSelected)) { 
-                        <option value="@Instrutor.Cpf" selected>@Instrutor.Nome</option>
-                    } else{
-                        <option value="@Instrutor.Cpf">@Instrutor.Nome</option>
+            <label for="Usuario">Instrutor</label>
+            @{
+                bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Perfil.Administrador.GetDescription());
+            }
+            @if (admin)
+            {
+                <select class="form-control" id="Usuario" name="Usuario.cpf" asp-for="Usuario" required>
+                    <option value="">Selecione o instrutor</option>
+                    @foreach (Usuario Usuario in ViewBag.Usuarios)
+                    {
+                        string isSelected = Model != null && Usuario.Cpf == Model.Usuario.Cpf ? "selected" : "";
+                        if (!string.IsNullOrEmpty(isSelected))
+                        {
+                            <option value="@Usuario.Cpf" selected>@Usuario.Nome</option>
+                        }
+                        else
+                        {
+                            <option value="@Usuario.Cpf">@Usuario.Nome</option>
+                        }
                     }
-                }
-            </select>
-        </div>
-        <div class="form-group div">
-            <label for="Status">Status</label>
-            <select class="form-control" id="Status" name="Status" required>
-                <option value="">Selecione o status</option>
-                @foreach (string status in ViewBag.Status)
-                {
-                    string isSelected = Model!= null && status == Model.Status ? "selected" : "";
-                    if (!string.IsNullOrEmpty(isSelected))
-                    { 
-                        <option value="@status" selected>@status</option>
-                    } else{
-                        <option value="@status">@status</option>
+                </select>
+            }
+            else
+            {
+                <select class="form-control" id="Usuario" name="Usuario.cpf" asp-for="Usuario" disabled>
+                    @foreach (Usuario Usuario in ViewBag.Usuarios)
+                    {
+                        string isSelected = Model != null && Usuario.Cpf == Model.Usuario.Cpf ? "selected" : "";
+                        if (!string.IsNullOrEmpty(isSelected))
+                        {
+                            <option value="@Usuario.Cpf" selected>@Usuario.Nome</option>
+                        }
                     }
-                }
-            </select>
+                </select>
+            }
         </div>
     </div>
-        <div class="divDuasColunas divBotoes">
-            <button type="button" class="btn-custom" onclick="submitForm()">Salvar</button>
-            @* <div></div>
-             <div></div> *@
-            <button type="button" class="btn-custom" onclick="Voltar('Home/Workshops')">Voltar</button>
-        </div>
+    <div class="divDuasColunas divBotoes">
+        <button type="button" class="btn-custom" onclick="submitForm()">Salvar</button>
+        <button type="button" class="btn-custom" onclick="Voltar('Home/Workshops')">Voltar</button>
+    </div>
 
 </div>
 

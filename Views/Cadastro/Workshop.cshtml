@@ -24,10 +24,9 @@
                 Nome: checkField(document.getElementById('Nome')),
                 Descricao: checkField(document.getElementById('Descricao')),
                 Datas: dates,
-                InstrutorCpf: checkField(document.getElementById('Instrutor')),
+                UsuarioCpf: checkField(document.getElementById('Usuario')),
                 Categoria: checkField(document.getElementById('Categoria')),
-                Modalidade: checkField(document.getElementById('Modalidade')),
-                Status: checkField(document.getElementById('Status'))
+                Modalidade: checkField(document.getElementById('Modalidade'))
             };
 
             fetch('/api/Workshop/@Model.ID', {
@@ -37,7 +36,7 @@
                 },
                 body: JSON.stringify(formData)
             }).then(response =>{
-                if (response.status === 400) {
+                if (!response.ok) {
                     const contentType = response.headers.get('Content-Type');
                     if (contentType && contentType.includes('application/problem+json; charset=utf-8')){
                         return response.json().then(errorData => {
@@ -50,13 +49,13 @@
                             alert(mensagens.join('\n')); 
                             throw new Error(mensagens.join('\n'));
                         });
-                }
-                response.text().then(errorText => {
+                    }
+                    response.text().then(errorText => {
                         alert(`${errorText}`);
                         throw new Error(errorText);
-                });
+                    });
+                    throw new Error("Erro");
                 }
-                return response.text();
             })
             .then(data => {
                 window.location.href = '/Home/Workshops';

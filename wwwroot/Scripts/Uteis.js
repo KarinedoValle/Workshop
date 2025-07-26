@@ -20,12 +20,12 @@ function checkField(field) {
 }
 
 function validaWorkshopCamposPrincipais(formData) {
-    if (!formData.Nome || !formData.Descricao || !formData.InstrutorCpf || !formData.Categoria || !formData.Modalidade || !formData.Status)
+    if (!formData.Nome || !formData.Descricao || !formData.UsuarioCpf || !formData.Categoria || !formData.Modalidade || !formData.Status)
         return false;
     return true;
 }
 
-function validateFormInstrutor(formData) {
+function validateFormUsuario(formData) {
     if (!formData.Nome || !formData.CPF || !formData.Telefone || !formData.Email || !formData.Login || !formData.Senha)
         return false;
     return true;
@@ -34,6 +34,7 @@ function validateFormInstrutor(formData) {
 function addDateField() {
     const date = new Date(document.querySelector('input[name="Datas"]').value);
     if (isNaN(date.getTime())) {
+        alert("Selecione uma data para adicionar.");
         return;
     }
 

@@ -22,13 +22,16 @@ namespace Workshop.Controllers.View
         [HttpGet("Cadastrar")]
         public IActionResult Cadastrar()
         {
+            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Perfil.Administrador.GetDescription());
+            if (!admin)
+                return Forbid();
 
             ViewBag.Categorias = EnumExtensions.GetEnumDescriptions<Categoria>();
             ViewBag.Modalidades = EnumExtensions.GetEnumDescriptions<Modalidade>(); 
             ViewBag.Status = EnumExtensions.GetEnumDescriptions<Status>();
 
-            List<Instrutor> Instrutores = _context.Instrutor.ToList();
-            ViewBag.Instrutores = Instrutores;
+            List<Usuario> Usuarios = _context.Usuario.ToList();
+            ViewBag.Usuarios = Usuarios;
 
             return View();
         }
@@ -36,15 +39,23 @@ namespace Workshop.Controllers.View
         [HttpGet("Workshop/{id}")]
         public IActionResult Workshop(int id)
         {
-            Models.Workshop? workshop = _context.Workshop.Include(w => w.Instrutor).FirstOrDefault(w => w.ID == id);
-            
+            Models.Workshop? workshop = _context.Workshop.Include(w => w.Usuario).FirstOrDefault(w => w.ID == id);
+
             if (workshop == null)
                 return NotFound();
+
+            var userCpf = User.FindFirst("Cpf")?.Value;
+            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Enums.Perfil.Administrador.GetDescription());
+            bool proprioCPF = User.FindFirst("Cpf")?.Value == Models.Usuario.FormatCpf(workshop.Usuario.Cpf);
+            if (!admin && !proprioCPF)
+            {
+                return Forbid();
+            }
 
             ViewBag.Categorias = EnumExtensions.GetEnumDescriptions<Categoria>();
             ViewBag.Modalidades = EnumExtensions.GetEnumDescriptions<Modalidade>();
             ViewBag.Status = EnumExtensions.GetEnumDescriptions<Status>();
-            ViewBag.Instrutores = _context.Instrutor.ToList();
+            ViewBag.Usuarios = _context.Usuario.ToList();
             return View(workshop);
         }
     }
