@@ -23,7 +23,7 @@
             <div id="datasContainer">
                 @if (Model != null)
                 {
-                    @foreach (DateTime data in Model.Datas)
+                    @foreach (DateTimeOffset data in Model.Datas)
                     {
                         <script>
                             var dateString = '@data.ToString("yyyy-MM-ddTHH:mm")';

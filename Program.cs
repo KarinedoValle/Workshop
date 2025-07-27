@@ -6,6 +6,9 @@ using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Workshop.DB;
+using Workshop.Services.API.Usuario;
+using Workshop.Services.API.Workshop;
+using Workshop.Services.View.Usuario;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +90,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<IWorkshopService, WorkshopService>();
+builder.Services.AddScoped<Workshop.Services.API.Usuario.IUsuarioService, Workshop.Services.API.Usuario.UsuarioService>();
+builder.Services.AddScoped<IAutenticacaoService, AutenticacaoService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ICadastroService, CadastroService>();
+builder.Services.AddScoped<Workshop.Services.View.Usuario.IUsuarioService, Workshop.Services.View.Usuario.UsuarioService>();
 
 
 

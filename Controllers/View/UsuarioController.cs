@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Workshop.DB;
-using Workshop.Enums;
+using Workshop.Services.View.Usuario;
 
 namespace Workshop.Controllers.View
 {
@@ -10,22 +9,22 @@ namespace Workshop.Controllers.View
     public class UsuarioController : Controller
     {
         private readonly ILogger<UsuarioController> _logger;
-        private readonly AppDbContext _context;
-        public UsuarioController(ILogger<UsuarioController> logger, AppDbContext context)
+        private readonly IUsuarioService _usuarioService;
+
+        public UsuarioController(ILogger<UsuarioController> logger, IUsuarioService usuarioService)
         {
             _logger = logger;
-            _context = context;
+            _usuarioService = usuarioService;
         }
 
         [HttpGet("Cadastrar")]
         public IActionResult Cadastrar()
         {
-            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Perfil.Administrador.GetDescription());
+            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Enums.Perfil.Administrador.GetDescription());
             if (!admin)
                 return Forbid();
-            
 
-            ViewBag.Perfis = EnumExtensions.GetEnumDescriptions<Perfil>();
+            ViewBag.Perfis = _usuarioService.ObterPerfis();
             return View();
         }
 
@@ -39,19 +38,18 @@ namespace Workshop.Controllers.View
         public IActionResult Usuario(string cpf)
         {
             var userCpf = User.FindFirst("Cpf")?.Value;
-            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Perfil.Administrador.GetDescription());
+            bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Enums.Perfil.Administrador.GetDescription());
 
-            if (!admin && cpf != userCpf)
+            if (!admin && !_usuarioService.UsuarioTemPermissao(userCpf, cpf))
                 return Forbid();
-            
 
-            Models.Usuario? Usuario = _context.Usuario.FirstOrDefault(C => C.Cpf == cpf);
-            
-            if (Usuario == null)
+            var usuario = _usuarioService.ObterUsuarioPorCpf(cpf);
+
+            if (usuario == null)
                 return NotFound();
-            ViewBag.Perfis = EnumExtensions.GetEnumDescriptions<Perfil>();
-            return View(Usuario);
-        }
 
+            ViewBag.Perfis = _usuarioService.ObterPerfis();
+            return View(usuario);
+        }
     }
 }

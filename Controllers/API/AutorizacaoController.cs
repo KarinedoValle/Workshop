@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Workshop.DB;
 using Workshop.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Workshop.Controllers.API
 {
@@ -13,54 +7,22 @@ namespace Workshop.Controllers.API
     [ApiController]
     public class AutorizacaoController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly SecurityKey _jwtKey;
+        private readonly IAutenticacaoService _autenticacaoService;
 
-        public AutorizacaoController(AppDbContext context, SecurityKey jwtKey)
+        public AutorizacaoController(IAutenticacaoService autenticacaoService)
         {
-            _context = context;
-            _jwtKey = jwtKey;
+            _autenticacaoService = autenticacaoService;
         }
 
         [HttpPost("token")]
         public IActionResult Token([FromForm] Token request)
         {
-            var Usuario = _context.Usuario.FirstOrDefault(i => i.Perfil == request.Profile);
+            var (sucesso, resultado, erro) = _autenticacaoService.GerarToken(request);
 
-            if (Usuario == null)
-            {
-                return Unauthorized(new { error = "Perfil inválido." });
-            }
+            if (!sucesso)
+                return Unauthorized(new { error = erro });
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, Usuario.Login),
-                new Claim("Cpf", Usuario.Cpf.ToString()),
-                new Claim("Perfil", Usuario.Perfil)
-            };
-
-            var creds = new SigningCredentials(_jwtKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: "http://localhost:5001",
-                audience: "http://localhost:5001",
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
-                signingCredentials: creds
-            );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return Ok(new
-            {
-                access_token = tokenString,
-                token_type = "Bearer",
-                expires_in = 3600
-            });
+            return Ok(resultado);
         }
     }
-
-    
-
-
 }

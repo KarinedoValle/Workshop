@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
+ï»¿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Workshop.DB;
 using Workshop.Enums;
 using Workshop.Models;
 
@@ -12,11 +10,12 @@ namespace Workshop.Controllers.View
     public class CadastroController : Controller
     {
         private readonly ILogger<CadastroController> _logger;
-        private readonly AppDbContext _context;
-        public CadastroController(ILogger<CadastroController> logger, AppDbContext context)
+        private readonly ICadastroService _cadastroService;
+
+        public CadastroController(ILogger<CadastroController> logger, ICadastroService cadastroService)
         {
             _logger = logger;
-            _context = context;
+            _cadastroService = cadastroService;
         }
 
         [HttpGet("Cadastrar")]
@@ -26,11 +25,11 @@ namespace Workshop.Controllers.View
             if (!admin)
                 return Forbid();
 
-            ViewBag.Categorias = EnumExtensions.GetEnumDescriptions<Categoria>();
-            ViewBag.Modalidades = EnumExtensions.GetEnumDescriptions<Modalidade>(); 
-            ViewBag.Status = EnumExtensions.GetEnumDescriptions<Status>();
+            ViewBag.Categorias = _cadastroService.ObterCategorias();
+            ViewBag.Modalidades = _cadastroService.ObterModalidades();
+            ViewBag.Status = _cadastroService.ObterStatus();
 
-            List<Usuario> Usuarios = _context.Usuario.ToList();
+            List<Usuario> Usuarios = _cadastroService.ObterUsuarios();
             ViewBag.Usuarios = Usuarios;
 
             return View();
@@ -39,23 +38,25 @@ namespace Workshop.Controllers.View
         [HttpGet("Workshop/{id}")]
         public IActionResult Workshop(int id)
         {
-            Models.Workshop? workshop = _context.Workshop.Include(w => w.Usuario).FirstOrDefault(w => w.ID == id);
+            var workshop = _cadastroService.ObterWorkshop(id);
 
             if (workshop == null)
                 return NotFound();
 
             var userCpf = User.FindFirst("Cpf")?.Value;
             bool admin = User.HasClaim(c => c.Type == "Perfil" && c.Value == Enums.Perfil.Administrador.GetDescription());
-            bool proprioCPF = User.FindFirst("Cpf")?.Value == Models.Usuario.FormatCpf(workshop.Usuario.Cpf);
+            bool proprioCPF = userCpf == Models.Usuario.FormatCpf(workshop.Usuario.Cpf);
+
             if (!admin && !proprioCPF)
             {
                 return Forbid();
             }
 
-            ViewBag.Categorias = EnumExtensions.GetEnumDescriptions<Categoria>();
-            ViewBag.Modalidades = EnumExtensions.GetEnumDescriptions<Modalidade>();
-            ViewBag.Status = EnumExtensions.GetEnumDescriptions<Status>();
-            ViewBag.Usuarios = _context.Usuario.ToList();
+            ViewBag.Categorias = _cadastroService.ObterCategorias();
+            ViewBag.Modalidades = _cadastroService.ObterModalidades();
+            ViewBag.Status = _cadastroService.ObterStatus();
+            ViewBag.Usuarios = _cadastroService.ObterUsuarios();
+
             return View(workshop);
         }
     }

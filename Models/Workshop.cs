@@ -30,26 +30,26 @@ namespace Workshop.Models
         [Required(ErrorMessage = "A descrição é obrigatória.")]
         public string Descricao { get; set; }
 
-        [Required(ErrorMessage = "O instrutor é obrigatório.")]
         public Usuario Usuario { get; set; }
 
-        public List<DateTime> Datas
-        {
-            get
-            {
-                return _datas?.Select(d => d.ToLocalTime()).ToList();
-            }
-            set
-            {
-                _datas = value?.Select(d => d.ToUniversalTime()).ToList();
-            }
-        }
+        public List<DateTimeOffset> Datas { get; set; }
+        //public List<DateTime> Datas
+        //{
+        //    get
+        //    {
+        //        return _datas?.Select(d => d.ToLocalTime()).ToList();
+        //    }
+        //    set
+        //    {
+        //        _datas = value?.Select(d => d.ToLocalTime()).ToList();
+        //        //_datas = value?.Select(d => d.ToUniversalTime()).ToList();
+        //    }
+        //}
 
-        
+
 
         [Column("Categoria")]
         [JsonProperty("Categoria")]
-        [Required(ErrorMessage = "A categoria é obrigatória.")]
         [EnumValido(typeof(Categoria), ErrorMessage = "A categoria é obrigatória.")]
         public string Categoria
         {
@@ -76,7 +76,6 @@ namespace Workshop.Models
 
         [JsonProperty("Modalidade")]
         [Column("Modalidade")]
-        [Required(ErrorMessage = "A modalidade é obrigatória.")]
         [EnumValido(typeof(Modalidade), ErrorMessage = "A modalidade é obrigatória.")]
         public string Modalidade
         {
@@ -163,7 +162,7 @@ namespace Workshop.Models
         }
 
 
-        public static List<Workshop> Sort(List<Workshop> workshops)
+        public static List<WorkshopResponse> Sort(List<WorkshopResponse> workshops)
         {
             return workshops.OrderBy(w => w.ID).ToList();
         }

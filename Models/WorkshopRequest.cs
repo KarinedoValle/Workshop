@@ -10,7 +10,7 @@ namespace Workshop.Models
         [Required(ErrorMessage = "A descrição é obrigatório.")]
         public string Descricao { get; set; }
 
-        public List<DateTime> Datas { get; set; }
+        public List<DateTimeOffset> Datas { get; set; }
 
        [Required(ErrorMessage = "O Usuario é obrigatório.")]
         public string UsuarioCpf { get; set; }

@@ -1,10 +1,6 @@
 ﻿@using Workshop.Enums
 @{
     ViewData["Title"] = "Workshops";
-    // var perfil = User.Claims.FirstOrDefault(c => c.Type == "Perfil")?.Value;
-    // var CPF = User.Claims.FirstOrDefault(c => c.Type == "Cpf")?.Value;
-    // bool isAdmin = perfil == Perfil.Administrador.GetDescription();
-    // bool isLeitor = perfil == Perfil.Leitor.GetDescription();
 }
 
 <div class="text-center">
@@ -20,7 +16,6 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Categoria</th>
@@ -50,13 +45,12 @@
                         const formattedDates = item.datas.map(date => formatDate(new Date(date))).join(', ');
                         container.append(`
                           <tr data-id="${item.id}">
-                                <td>${item.id}</td>
                                 <td>${item.nome}</td>
                                 <td>${item.descricao}</td>
                                 <td>${item.categoria}</td>
                                 <td>${item.modalidade}</td>
                                 <td>${formattedDates}</td>
-                                <td>${item.usuario.nome}</td>
+                                <td>${item.instrutor}</td>
                                 <td>${item.status}</td>
                                 <td><i class="fas fa-edit" onclick="editarItem(${item.id})"></i></td>
                                 <td><i class="fas fa-trash-alt" onclick="deletarItem(${item.id}, '${item.nome}')"></i></td>

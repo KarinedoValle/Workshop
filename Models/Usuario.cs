@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -47,7 +48,6 @@ namespace Workshop.Models
        
         [Column("Perfil")]
         [JsonProperty(nameof(Perfil))]
-        [Required(ErrorMessage = "O perfil é obrigatório.")]
         [EnumValido(typeof(Perfil), ErrorMessage = "O perfil é obrigatório.")]
         public string Perfil
         {
@@ -97,8 +97,6 @@ namespace Workshop.Models
 
             return telefone;
         }
-
-
 
     }
 }
