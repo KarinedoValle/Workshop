@@ -36,7 +36,10 @@ namespace Workshop.Services.API.Workshop
             erroPermissao = null;
 
             var workshop = _context.Workshop.Include(w => w.Usuario).FirstOrDefault(w => w.ID == id);
-            if (workshop == null) return null;
+            if (workshop == null) {
+                erroPermissao = "Workshop não encontrado.";
+                return null;
+            }
 
             bool proprioCPF = cpfUsuario == Models.Usuario.FormatCpf(workshop.Usuario.Cpf);
             if (!proprioCPF && !isAdmin)
@@ -130,14 +133,14 @@ namespace Workshop.Services.API.Workshop
 
             var workshop = _context.Workshop.Find(id);
             if (workshop == null)
-                return (false, null);
+                return (false, "Workshop não encontrado.");
 
             _context.Workshop.Remove(workshop);
             _context.SaveChanges();
             return (true, null);
         }
 
-        private static bool ValidarHorarioComercial(List<DateTimeOffset>? datas)
+        private static bool ValidarHorarioComercial(List<DateTime>? datas)
         {
             if (datas == null || datas.Count == 0)
                 return true;

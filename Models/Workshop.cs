@@ -32,19 +32,18 @@ namespace Workshop.Models
 
         public Usuario Usuario { get; set; }
 
-        public List<DateTimeOffset> Datas { get; set; }
-        //public List<DateTime> Datas
-        //{
-        //    get
-        //    {
-        //        return _datas?.Select(d => d.ToLocalTime()).ToList();
-        //    }
-        //    set
-        //    {
-        //        _datas = value?.Select(d => d.ToLocalTime()).ToList();
-        //        //_datas = value?.Select(d => d.ToUniversalTime()).ToList();
-        //    }
-        //}
+        [Column(TypeName = "timestamp without time zone[]")]
+        public List<DateTime> Datas
+        {
+            get
+            {
+                return _datas?.Select(d => DateTime.SpecifyKind(d, DateTimeKind.Local)).ToList(); ;
+            }
+            set
+            {
+                _datas = value;
+            }
+        }
 
 
 
@@ -166,7 +165,5 @@ namespace Workshop.Models
         {
             return workshops.OrderBy(w => w.ID).ToList();
         }
-
-
     }
 }

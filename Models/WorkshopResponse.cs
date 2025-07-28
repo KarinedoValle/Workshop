@@ -7,7 +7,7 @@
 
         public string Descricao { get; private set; }
 
-        public List<DateTimeOffset> Datas { get; private set; }
+        public List<DateTime> Datas { get; private set; }
 
         public string Instrutor { get; private set; }
 
@@ -17,7 +17,7 @@
 
         public string Status { get; private set; }
 
-        public WorkshopResponse(int id, string nome, string descricao, List<DateTimeOffset> datas, string instrutor, string categoria, string modalidade, string status)
+        public WorkshopResponse(int id, string nome, string descricao, List<DateTime> datas, string instrutor, string categoria, string modalidade, string status)
         {
             ID = id;
             Nome = nome;

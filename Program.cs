@@ -3,22 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Workshop.DB;
-using Workshop.Services.API.Usuario;
 using Workshop.Services.API.Workshop;
-using Workshop.Services.View.Usuario;
+using Newtonsoft.Json;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.Converters.Add(new DateTimeLocalJsonConverter());
+    });
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Workshop API", Version = "v1" });
-
+    c.SchemaFilter<CustomDateSchemaFilter>();
     c.DocInclusionPredicate((docName, apiDesc) =>
     {
         var controllerActionDescriptor = apiDesc.ActionDescriptor as Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor;

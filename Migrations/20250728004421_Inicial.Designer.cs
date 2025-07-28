@@ -13,7 +13,7 @@ using Workshop.DB;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250725002048_Inicial")]
+    [Migration("20250728004421_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -97,7 +97,6 @@ namespace Workshop.Migrations
                         .HasColumnName("Status");
 
                     b.Property<string>("UsuarioCpf")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ID");
@@ -111,9 +110,7 @@ namespace Workshop.Migrations
                 {
                     b.HasOne("Workshop.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioCpf")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioCpf");
 
                     b.Navigation("Usuario");
                 });

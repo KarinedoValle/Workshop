@@ -14,9 +14,7 @@ namespace Workshop.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Workshop\";");
-            migrationBuilder.Sql("DROP TABLE IF EXISTS \"Instrutor\";");
             migrationBuilder.Sql("DROP TABLE IF EXISTS \"Usuario\";");
-
             migrationBuilder.CreateTable(
                 name: "Usuario",
                 columns: table => new
@@ -42,8 +40,8 @@ namespace Workshop.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Descricao = table.Column<string>(type: "text", nullable: false),
-                    UsuarioCpf = table.Column<string>(type: "text", nullable: false),
-                    Datas = table.Column<List<DateTime>>(type: "timestamp with time zone[]", nullable: false),
+                    UsuarioCpf = table.Column<string>(type: "text", nullable: true),
+                    Datas = table.Column<List<DateTime>>(type: "timestamp without time zone[]", nullable: false),
                     Categoria = table.Column<string>(type: "text", nullable: false),
                     Modalidade = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false)
@@ -55,8 +53,7 @@ namespace Workshop.Migrations
                         name: "FK_Workshop_Usuario_UsuarioCpf",
                         column: x => x.UsuarioCpf,
                         principalTable: "Usuario",
-                        principalColumn: "Cpf",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Cpf");
                 });
 
             migrationBuilder.CreateIndex(
@@ -75,23 +72,22 @@ namespace Workshop.Migrations
             migrationBuilder.DropTable(
                 name: "Usuario");
         }
-
         private string InserirAdministrador()
         {
             //Login: Admin
             //Senha: Admin
             return @"
-         INSERT INTO ""Usuario"" (""Cpf"", ""Nome"", ""Email"", ""Login"", ""Senha"", ""Telefone"", ""Perfil"")
-         VALUES (
-             '958.854.486-63',
-             'Administrador',
-             'admin@workshop.com',
-             'Admin',
-             'AQAAAAIAAYagAAAAEHFmTj244LrioF2lYGv3T5jIXv8f6P+EiNb+Ca8YUA+W+ooUdHSkddUIsUvsqBByOg==',
-             '(81) 99508-9677',
-             'Administrador'
-         );
-     ";
+             INSERT INTO ""Usuario"" (""Cpf"", ""Nome"", ""Email"", ""Login"", ""Senha"", ""Telefone"", ""Perfil"")
+             VALUES (
+                 '958.854.486-63',
+                 'Administrador',
+                 'admin@workshop.com',
+                 'Admin',
+                 'AQAAAAIAAYagAAAAEHFmTj244LrioF2lYGv3T5jIXv8f6P+EiNb+Ca8YUA+W+ooUdHSkddUIsUvsqBByOg==',
+                 '(81) 99508-9677',
+                 'Administrador'
+                );
+            ";
         }
     }
 }

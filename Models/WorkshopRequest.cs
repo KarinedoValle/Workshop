@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Workshop.Enums;
 
 namespace Workshop.Models
 {
@@ -7,18 +9,19 @@ namespace Workshop.Models
         [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "A descrição é obrigatório.")]
+        [Required(ErrorMessage = "A descrição é obrigatória.")]
         public string Descricao { get; set; }
 
-        public List<DateTimeOffset> Datas { get; set; }
+        [Column(TypeName = "timestamp without time zone[]")]
+        public List<DateTime> Datas { get; set; }
 
        [Required(ErrorMessage = "O Usuario é obrigatório.")]
         public string UsuarioCpf { get; set; }
 
-       [Required(ErrorMessage = "A categoria é obrigatório.")]
+        [EnumValido(typeof(Categoria), ErrorMessage = "A categoria é obrigatória.")]
         public string Categoria { get; set; }
 
-        [Required(ErrorMessage = "A modalidade é obrigatório.")]
+        [EnumValido(typeof(Modalidade), ErrorMessage = "A modalidade é obrigatória.")]
         public string Modalidade { get; set; }
 
     }

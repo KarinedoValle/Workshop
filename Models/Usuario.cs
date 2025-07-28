@@ -75,13 +75,11 @@ namespace Workshop.Models
         public static string FormatCpf(string cpf)
         {
             cpf = new string(cpf.Where(char.IsDigit).ToArray());
-            cpf = cpf.PadLeft(11, '0');
 
             if (cpf.Length == 11)
                 return $"{cpf[..3]}.{cpf.Substring(3, 3)}.{cpf.Substring(6, 3)}-{cpf.Substring(9, 2)}";
-            
-
-            return cpf;
+            else
+                return null;
         }
        
 
@@ -95,7 +93,7 @@ namespace Workshop.Models
                 return $"({telefone[..2]}) {telefone.Substring(2, 5)}-{telefone.Substring(7, 4)}";
             
 
-            return telefone;
+            return null;
         }
 
     }

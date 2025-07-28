@@ -94,7 +94,6 @@ namespace Workshop.Migrations
                         .HasColumnName("Status");
 
                     b.Property<string>("UsuarioCpf")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ID");
@@ -108,9 +107,7 @@ namespace Workshop.Migrations
                 {
                     b.HasOne("Workshop.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioCpf")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioCpf");
 
                     b.Navigation("Usuario");
                 });

@@ -17,7 +17,8 @@
         function submitForm() {
 
             const dateFields = document.querySelectorAll('p[name="Datas"]');
-            const dates = Array.from(dateFields).map(field => new Date(field.id).toISOString());
+            const dates = Array.from(dateFields).map(field => field.id);
+            console.log(`--------------DATAS${dates[0]}`);
             const formData = {
 
                 Nome: checkField(document.getElementById('Nome')),
