@@ -73,7 +73,7 @@ namespace Workshop.Migrations
 
                     b.PrimitiveCollection<List<DateTime>>("Datas")
                         .IsRequired()
-                        .HasColumnType("timestamp with time zone[]");
+                        .HasColumnType("timestamp without time zone[]");
 
                     b.Property<string>("Descricao")
                         .IsRequired()

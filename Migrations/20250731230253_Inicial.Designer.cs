@@ -13,7 +13,7 @@ using Workshop.DB;
 namespace Workshop.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250728004421_Inicial")]
+    [Migration("20250731230253_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -76,7 +76,7 @@ namespace Workshop.Migrations
 
                     b.PrimitiveCollection<List<DateTime>>("Datas")
                         .IsRequired()
-                        .HasColumnType("timestamp with time zone[]");
+                        .HasColumnType("timestamp without time zone[]");
 
                     b.Property<string>("Descricao")
                         .IsRequired()

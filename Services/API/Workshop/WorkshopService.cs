@@ -113,6 +113,9 @@ namespace Workshop.Services.API.Workshop
             if (usuario == null)
                 return (false, $"Usuário com CPF {request.UsuarioCpf} não encontrado.");
 
+            if (usuario.Perfil == Perfil.Leitor.GetDescription())
+                return (false, "Não é possível cadastrar workshops com um instrutor que tenha perfil 'Leitor'.");
+
             var workshop = Models.Workshop.ConverteParaModelo(request, usuario, existente.ID);
             if (!ValidarHorarioComercial(workshop.Datas))
                 return (false, "Encontros fora do horário comercial (8h às 19h) não são permitidos.");

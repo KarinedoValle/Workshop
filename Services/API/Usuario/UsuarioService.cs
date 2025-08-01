@@ -113,7 +113,8 @@ namespace Workshop.Services.API.Usuario
                 return (false, "Usuário sem permissão para alterar o perfil.");
 
             bool senhaFoiInformada = !string.IsNullOrWhiteSpace(usuario.Senha);
-            usuario.Senha = senhaFoiInformada ? HashPassword(usuario.Senha) : existente.Senha;
+            bool senhaAlterada = usuario.Senha != existente.Senha;
+            usuario.Senha = senhaFoiInformada && senhaAlterada ? HashPassword(usuario.Senha) : existente.Senha;
 
             _context.Entry(existente).State = EntityState.Detached;
             _context.Entry(usuario).State = EntityState.Modified;
