@@ -10,7 +10,7 @@ namespace Workshop.Models
     public class Usuario
     {
         [Key]
-        [Required(ErrorMessage = "O CPF é obrigatório.")]
+        [Required(ErrorMessage = "CPF inválido.")]
         public string Cpf
         {
             get => _cpf;
@@ -26,19 +26,19 @@ namespace Workshop.Models
         [NotMapped]
         private string _telefone;
 
-        [Required(ErrorMessage = "A senha é obrigatória.")]
+        [Required(ErrorMessage = "Senha inválida.")]
         public string Senha { get; set; }
 
-        [Required(ErrorMessage = "O nome é obrigatório.")]
+        [Required(ErrorMessage = "Nome inválido.")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "O email é obrigatório.")]
+        [Required(ErrorMessage = "Email inválido.")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "O login é obrigatório.")]
+        [Required(ErrorMessage = "Login inválido.")]
         public string Login { get; set; }
 
-        [Required(ErrorMessage = "O telefone é obrigatório.")]
+        [Required(ErrorMessage = "Telefone inválido.")]
         public string Telefone
         {
             get => _telefone;
@@ -48,7 +48,7 @@ namespace Workshop.Models
        
         [Column("Perfil")]
         [JsonProperty(nameof(Perfil))]
-        [EnumValido(typeof(Perfil), ErrorMessage = "O perfil é obrigatório.")]
+        [EnumValido(typeof(Perfil), ErrorMessage = "Perfil inválido.")]
         public string Perfil
         {
             get => PerfilEnum?.GetDescription() ?? string.Empty;

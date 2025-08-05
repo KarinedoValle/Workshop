@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System.Globalization;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Workshop.DB;
 using Workshop.Services.API.Workshop;
-using Newtonsoft.Json;
 
 
 
@@ -82,9 +83,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnChallenge = context =>
             {
-                context.HandleResponse(); 
-                context.Response.Redirect("/Erro/401");
+                var path = context.Request.Path.Value ?? "";
+                if (!path.StartsWith("/api", StringComparison.OrdinalIgnoreCase)) {
+                    context.HandleResponse();
+                    context.Response.Redirect("/Erro/401");
+                }
                 return Task.CompletedTask;
+
             }
         };
 

@@ -24,10 +24,10 @@ namespace Workshop.Models
         [NotMapped]
         private List<DateTime> _datas;
 
-        [Required(ErrorMessage = "O nome é obrigatório.")]
+        [Required(ErrorMessage = "Nome inválido.")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "A descrição é obrigatória.")]
+        [Required(ErrorMessage = "Descrição inválida.")]
         public string Descricao { get; set; }
 
         public Usuario Usuario { get; set; }
@@ -49,7 +49,7 @@ namespace Workshop.Models
 
         [Column("Categoria")]
         [JsonProperty("Categoria")]
-        [EnumValido(typeof(Categoria), ErrorMessage = "A categoria é obrigatória.")]
+        [EnumValido(typeof(Categoria), ErrorMessage = "Categoria inválida.")]
         public string Categoria
         {
             get => CategoriaEnum?.GetDescription() ?? string.Empty;
@@ -75,7 +75,7 @@ namespace Workshop.Models
 
         [JsonProperty("Modalidade")]
         [Column("Modalidade")]
-        [EnumValido(typeof(Modalidade), ErrorMessage = "A modalidade é obrigatória.")]
+        [EnumValido(typeof(Modalidade), ErrorMessage = "Modalidade inválida.")]
         public string Modalidade
         {
             get => ModalidadeEnum?.GetDescription() ?? string.Empty;

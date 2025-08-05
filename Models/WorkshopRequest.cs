@@ -6,22 +6,22 @@ namespace Workshop.Models
 {
     public class WorkshopRequest
     {
-        [Required(ErrorMessage = "O nome é obrigatório.")]
+        [Required(ErrorMessage = "Nome inválido.")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "A descrição é obrigatória.")]
+        [Required(ErrorMessage = "Descrição inválida.")]
         public string Descricao { get; set; }
 
         [Column(TypeName = "timestamp without time zone[]")]
         public List<DateTime> Datas { get; set; }
 
-       [Required(ErrorMessage = "O Usuario é obrigatório.")]
+       [Required(ErrorMessage = "Instrutor inválido.")]
         public string UsuarioCpf { get; set; }
 
-        [EnumValido(typeof(Categoria), ErrorMessage = "A categoria é obrigatória.")]
+        [EnumValido(typeof(Categoria), ErrorMessage = "Categoria inválida.")]
         public string Categoria { get; set; }
 
-        [EnumValido(typeof(Modalidade), ErrorMessage = "A modalidade é obrigatória.")]
+        [EnumValido(typeof(Modalidade), ErrorMessage = "Modalidade inválida.")]
         public string Modalidade { get; set; }
 
     }
