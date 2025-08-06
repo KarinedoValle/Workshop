@@ -42,7 +42,7 @@ namespace Workshop.Services.API.Usuario
             if (!proprioCPF && !isAdmin)
                 return (false, null, "Sem permissão para visualizar este usuário.");
 
-            var usuario = _context.Usuario.Find(Models.Usuario.FormatCpf(cpf));
+            var usuario = _context.Usuario.Find(cpfFormatado);
             if (usuario == null)
                 return (false, null, "Usuário não encontrado.");
 
@@ -144,7 +144,7 @@ namespace Workshop.Services.API.Usuario
             return (true, null);
         }
 
-        private string HashPassword(string senha)
+        public static string HashPassword(string senha)
         {
             var passwordHasher = new PasswordHasher<Models.Usuario>();
             return passwordHasher.HashPassword(null!, senha);

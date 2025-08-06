@@ -1,8 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Workshop.DB;
 using Workshop.Models;
+using Workshop.Services.API.Usuario;
 
 public class AutenticacaoService : IAutenticacaoService
 {
@@ -17,10 +19,16 @@ public class AutenticacaoService : IAutenticacaoService
 
     public (bool sucesso, object? resultado, string? erro) GerarToken(Token request)
     {
-        var usuario = _context.Usuario.FirstOrDefault(u => u.Perfil == request.Profile);
+        var usuario = _context.Usuario.FirstOrDefault(u => u.Login == request.ClientId);
         if (usuario == null)
+            return(false, null, "Usuário ou perfil inválido.");
+
+        var perfilcorreto = usuario.Perfil == request.Profile;
+        var verificacaoSenha = new PasswordHasher<Usuario>().VerifyHashedPassword(usuario, usuario.Senha, request.ClientSecret);
+
+        if (!perfilcorreto || (verificacaoSenha != PasswordVerificationResult.Success))
         {
-            return (false, null, "Perfil inválido.");
+            return (false, null, "Usuário ou perfil inválido.");
         }
 
         var claims = new[]
